@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Raaju Pahlowan — iOS Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #050a0f;
+    --bg2: #090f18;
+    --surface: #0d1520;
+    --border: rgba(0,229,255,0.1);
+    --accent: #00e5ff;
+    --accent2: #3c8bfd;
+    --text: #e8f4f8;
+    --muted: #4a7a8a;
+    --serif: 'Instrument Serif', serif;
+    --mono: 'DM Mono', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s, height 0.2s, background 0.2s;
+    mix-blend-mode: screen;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1px solid rgba(0,229,255,0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.12s ease-out, width 0.2s, height 0.2s;
+    mix-blend-mode: screen;
+  }
+
+  /* Noise texture overlay */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* Grid lines */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+    background-size: 80px 80px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 clamp(24px, 8vw, 120px);
+    overflow: hidden;
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,229,255,0.06) 0%, transparent 70%);
+    top: -100px; left: -100px;
+    pointer-events: none;
+    animation: drift 12s ease-in-out infinite alternate;
+  }
+  .hero-glow2 {
+    position: absolute;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(60,139,253,0.05) 0%, transparent 70%);
+    bottom: 0; right: 10%;
+    pointer-events: none;
+    animation: drift2 15s ease-in-out infinite alternate;
+  }
+  @keyframes drift { to { transform: translate(60px, 80px); } }
+  @keyframes drift2 { to { transform: translate(-40px, -60px); } }
+
+  .hero-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.2s;
+  }
+
+  .hero-name {
+    font-family: var(--serif);
+    font-size: clamp(56px, 9vw, 140px);
+    line-height: 0.92;
+    letter-spacing: -0.02em;
+    opacity: 0;
+    animation: fadeUp 0.9s ease forwards 0.4s;
+  }
+  .hero-name em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-desc {
+    margin-top: 40px;
+    font-size: 13px;
+    line-height: 1.9;
+    color: var(--muted);
+    max-width: 340px;
+    opacity: 0;
+    animation: fadeUp 0.9s ease forwards 0.7s;
+  }
+
+  .hero-links {
+    display: flex;
+    gap: 24px;
+    margin-top: 48px;
+    opacity: 0;
+    animation: fadeUp 0.9s ease forwards 0.9s;
+  }
+  .hero-link {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 4px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .hero-link:hover { color: var(--accent); border-color: var(--accent); }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 40px; right: clamp(24px, 8vw, 120px);
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    animation: fadeIn 1s ease forwards 1.4s;
+  }
+  .hero-scroll::before {
+    content: '';
+    display: block;
+    width: 40px; height: 1px;
+    background: var(--muted);
+    animation: expandLine 1s ease forwards 1.6s;
+    transform-origin: left;
+    transform: scaleX(0);
+  }
+  @keyframes expandLine { to { transform: scaleX(1); } }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  /* ─── SECTION BASE ─── */
+  section {
+    position: relative;
+    padding: clamp(80px, 12vw, 160px) clamp(24px, 8vw, 120px);
+  }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    max-width: 60px;
+    height: 1px;
+    background: var(--accent);
+    opacity: 0.4;
+  }
+
+  .section-title {
+    font-family: var(--serif);
+    font-size: clamp(36px, 5vw, 72px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 64px;
+  }
+
+  /* ─── ABOUT ─── */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  @media (max-width: 768px) {
+    .about-grid { grid-template-columns: 1fr; gap: 40px; }
+  }
+
+  .about-text {
+    font-size: 15px;
+    line-height: 2;
+    color: #8faebb;
+  }
+  .about-text strong { color: var(--text); font-weight: 400; }
+
+  .about-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+  .stat-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 32px 28px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+  .stat-box:hover { border-color: var(--accent); }
+  .stat-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .stat-box:hover::before { opacity: 1; }
+  .stat-num {
+    font-family: var(--serif);
+    font-size: 48px;
+    color: var(--accent);
+    line-height: 1;
+    display: block;
+    margin-bottom: 8px;
+  }
+  .stat-lbl {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ─── SKILLS ─── */
+  #skills { background: var(--bg2); }
+
+  .skills-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 48px;
+  }
+  .skill-pill {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .skill-pill::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: var(--accent);
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  .skill-pill:hover { color: var(--bg); border-color: var(--accent); }
+  .skill-pill:hover::before { opacity: 1; }
+  .skill-pill span { position: relative; z-index: 1; }
+
+  .skills-group-label {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+    opacity: 0.6;
+  }
+
+  /* ─── PROJECTS ─── */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2px;
+  }
+
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 40px 36px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+    min-height: 240px;
+  }
+  .project-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+  .project-card:hover { border-color: rgba(0,229,255,0.3); }
+  .project-card:hover::after { transform: scaleX(1); }
+
+  .project-lang {
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .lang-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+    background: var(--accent);
+  }
+  .lang-dot.java { background: #f0931a; }
+  .lang-dot.swift { background: #ff6b35; }
+
+  .project-name {
+    font-family: var(--serif);
+    font-size: 22px;
+    line-height: 1.2;
+    margin-bottom: 16px;
+    color: var(--text);
+    flex: 1;
+  }
+
+  .project-desc {
+    font-size: 12px;
+    line-height: 1.8;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+
+  .project-arrow {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s, gap 0.2s;
+  }
+  .project-card:hover .project-arrow { color: var(--accent); gap: 14px; }
+
+  /* ─── CONTACT ─── */
+  #contact { background: var(--bg2); text-align: center; }
+  #contact .section-title { margin-bottom: 24px; }
+
+  .contact-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 56px;
+    line-height: 1.8;
+  }
+
+  .contact-links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .contact-btn {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 16px 40px;
+    text-decoration: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .contact-btn.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg);
+  }
+  .contact-btn:not(.primary):hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .contact-btn.primary:hover { opacity: 0.85; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    padding: 32px clamp(24px, 8vw, 120px);
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  /* ─── SCROLL REVEAL ─── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 24px clamp(24px, 8vw, 120px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(12px);
+    background: rgba(5,10,15,0.6);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s;
+  }
+  nav.scrolled { border-bottom-color: var(--border); }
+
+  .nav-logo {
+    font-family: var(--serif);
+    font-size: 18px;
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: -0.01em;
+  }
+  .nav-logo em { color: var(--accent); font-style: italic; }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    .projects-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+
+<nav id="nav">
+  <a href="#" class="nav-logo">Raaju <em>Pahlowan</em></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Work</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <p class="hero-tag">iOS Developer · UX Obsessed · Dhaka, BD</p>
+  <h1 class="hero-name">Raaju<br><em>Pahlowan</em></h1>
+  <p class="hero-desc">
+    Crafting refined iOS experiences with obsessive attention to detail.
+    Swift enthusiast. Clean code advocate.
+  </p>
+  <div class="hero-links">
+    <a href="https://github.com/RaajuPahlowan" target="_blank" class="hero-link">GitHub</a>
+    <a href="https://www.linkedin.com/in/pahlowan/" target="_blank" class="hero-link">LinkedIn</a>
+    <a href="https://twitter.com/RaajuPahlowan" target="_blank" class="hero-link">X / Twitter</a>
+    <a href="mailto:raajupahlowan@gmail.com" class="hero-link">Email</a>
+  </div>
+  <div class="hero-scroll">Scroll</div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <p class="section-label reveal">001</p>
+  <h2 class="section-title reveal">About me</h2>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <p>I'm <strong>Raaju Pahlowan</strong>, an iOS developer with hands-on experience designing, developing, and maintaining <strong>production-level iOS applications</strong> using Swift and UIKit.</p>
+      <br/>
+      <p>Currently at <strong>Bdjobs.com Ltd.</strong> — Bangladesh's largest job portal — I work with the Mobile Application Development Team on real-world features and system improvements, from UI enhancements to REST API integration.</p>
+      <br/>
+      <p>I'm passionate about building <strong>clean, user-friendly mobile apps</strong> and continuously growing my craft. Every interaction matters, every pixel counts.</p>
+    </div>
+    <div class="about-stats reveal">
+      <div class="stat-box">
+        <span class="stat-num">29</span>
+        <span class="stat-lbl">Repositories</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-num">7mo+</span>
+        <span class="stat-lbl">Professional Exp.</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-num">iOS</span>
+        <span class="stat-lbl">Specialty</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-num">UX</span>
+        <span class="stat-lbl">Obsessed</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience" style="background: var(--bg2);">
+  <p class="section-label reveal">002</p>
+  <h2 class="section-title reveal">Experience</h2>
+
+  <div class="exp-item reveal">
+    <div class="exp-header">
+      <div class="exp-left">
+        <div class="exp-role">iOS Developer</div>
+        <div class="exp-company">Bdjobs.com Ltd. <span class="exp-type">· Full-time</span></div>
+      </div>
+      <div class="exp-meta">
+        <div class="exp-date">Nov 2025 — Present</div>
+        <div class="exp-loc">Dhaka, Bangladesh · On-site</div>
+      </div>
+    </div>
+    <div class="exp-context">Bangladesh's largest job portal — serving millions of users across the country.</div>
+    <ul class="exp-bullets">
+      <li>Contributed to a production-level iOS app used by a large-scale user base</li>
+      <li>Improved UI components with <strong>Swift & UIKit</strong> to enhance usability and experience</li>
+      <li>Built features for the Skills section and Customized CV Module</li>
+      <li>Integrated and maintained <strong>RESTful APIs</strong> using <strong>Alamofire</strong> for dynamic data</li>
+      <li>Managed API updates ensuring stability and backward compatibility</li>
+      <li>Debugged and resolved performance issues across the application</li>
+      <li>Worked in an <strong>agile team</strong> with backend devs, designers, and QA engineers</li>
+      <li>Used <strong>Git</strong> for version control, participated in code reviews and daily stand-ups</li>
+    </ul>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <p class="section-label reveal">003</p>
+  <h2 class="section-title reveal">Skills &<br><em style="font-family:var(--serif);font-style:italic;">Technologies</em></h2>
+
+  <div class="reveal">
+    <p class="skills-group-label">iOS & Mobile</p>
+    <div class="skills-row">
+      <div class="skill-pill"><span>Swift</span></div>
+      <div class="skill-pill"><span>SwiftUI</span></div>
+      <div class="skill-pill"><span>UIKit</span></div>
+      <div class="skill-pill"><span>Xcode</span></div>
+      <div class="skill-pill"><span>iOS SDK</span></div>
+      <div class="skill-pill"><span>WKWebView</span></div>
+    </div>
+  </div>
+
+  <div class="reveal">
+    <p class="skills-group-label">Backend & Languages</p>
+    <div class="skills-row">
+      <div class="skill-pill"><span>Java</span></div>
+      <div class="skill-pill"><span>OOP</span></div>
+      <div class="skill-pill"><span>Algorithms</span></div>
+      <div class="skill-pill"><span>Data Structures</span></div>
+    </div>
+  </div>
+
+  <div class="reveal">
+    <p class="skills-group-label">Design & Tools</p>
+    <div class="skills-row">
+      <div class="skill-pill"><span>UX Design</span></div>
+      <div class="skill-pill"><span>Git & GitHub</span></div>
+      <div class="skill-pill"><span>Clean Architecture</span></div>
+      <div class="skill-pill"><span>Figma</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <p class="section-label reveal">004</p>
+  <h2 class="section-title reveal">Selected<br><em style="font-family:var(--serif);font-style:italic;">Work</em></h2>
+  <div class="projects-grid">
+
+    <a href="https://github.com/RaajuPahlowan/iOS-basic-web-browser" target="_blank" class="project-card reveal">
+      <div class="project-lang"><span class="lang-dot swift"></span> Swift · iOS</div>
+      <div class="project-name">iOS Basic Web Browser</div>
+      <div class="project-desc">A fast, easy-to-use web browser built natively for iOS devices. Clean interface, smooth browsing experience.</div>
+      <div class="project-arrow">View on GitHub <span>→</span></div>
+    </a>
+
+    <a href="https://github.com/RaajuPahlowan/Swift-Playground-Solutions" target="_blank" class="project-card reveal">
+      <div class="project-lang"><span class="lang-dot swift"></span> Swift · Algorithms</div>
+      <div class="project-name">Swift Playground Solutions</div>
+      <div class="project-desc">A curated collection of Swift Playground exercises and algorithm solutions — coding practice with elegance. ★ 3</div>
+      <div class="project-arrow">View on GitHub <span>→</span></div>
+    </a>
+
+    <a href="https://github.com/RaajuPahlowan/iOS-Assumptions-of-winning" target="_blank" class="project-card reveal">
+      <div class="project-lang"><span class="lang-dot swift"></span> Swift · iOS</div>
+      <div class="project-name">Assumptions of Winning</div>
+      <div class="project-desc">An iOS application built in Swift exploring probability and outcome prediction through clean UI interactions.</div>
+      <div class="project-arrow">View on GitHub <span>→</span></div>
+    </a>
+
+    <a href="https://github.com/RaajuPahlowan/JAVA-Bank-Management-App" target="_blank" class="project-card reveal">
+      <div class="project-lang"><span class="lang-dot java"></span> Java · Console</div>
+      <div class="project-name">Bank Management App</div>
+      <div class="project-desc">A comprehensive console-based Java application for managing bank accounts, transactions, and customer records.</div>
+      <div class="project-arrow">View on GitHub <span>→</span></div>
+    </a>
+
+    <a href="https://github.com/RaajuPahlowan/JAVA-Employee-Management-System" target="_blank" class="project-card reveal">
+      <div class="project-lang"><span class="lang-dot java"></span> Java · Console</div>
+      <div class="project-name">Employee Management System</div>
+      <div class="project-desc">A full-featured employee management console application built in Java with clean OOP architecture.</div>
+      <div class="project-arrow">View on GitHub <span>→</span></div>
+    </a>
+
+    <a href="https://github.com/RaajuPahlowan/JAVA-Player-Management-System" target="_blank" class="project-card reveal">
+      <div class="project-lang"><span class="lang-dot java"></span> Java · Console</div>
+      <div class="project-name">Player Management System</div>
+      <div class="project-desc">A console-based Java system for managing sports players — rosters, stats, and records handled with precision.</div>
+      <div class="project-arrow">View on GitHub <span>→</span></div>
+    </a>
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <p class="section-label reveal" style="justify-content:center;">005</p>
+  <h2 class="section-title reveal">Let's build<br><em style="font-family:var(--serif);font-style:italic;">something great</em></h2>
+  <p class="contact-sub reveal">Open to iOS roles, freelance projects, and interesting collaborations.</p>
+  <div class="contact-links reveal">
+    <a href="mailto:raajupahlowan@gmail.com" class="contact-btn primary">Send an Email</a>
+    <a href="https://www.linkedin.com/in/pahlowan/" target="_blank" class="contact-btn">LinkedIn</a>
+    <a href="https://github.com/RaajuPahlowan" target="_blank" class="contact-btn">GitHub</a>
+    <a href="https://twitter.com/RaajuPahlowan" target="_blank" class="contact-btn">X / Twitter</a>
+  </div>
+</section>
+
+<footer>
+  <span>Raaju Pahlowan · iOS Developer</span>
+  <span>Dhaka, Bangladesh · 2026</span>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursor-ring');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+  function animRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animRing);
+  }
+  animRing();
+
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width = '16px';
+      cursor.style.height = '16px';
+      ring.style.width = '56px';
+      ring.style.height = '56px';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width = '8px';
+      cursor.style.height = '8px';
+      ring.style.width = '36px';
+      ring.style.height = '36px';
+    });
+  });
+
+  // Nav scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => observer.observe(r));
+</script>
+</body>
+</html>
