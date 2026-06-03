@@ -6,7 +6,7 @@
 <title>Raaju Pahlowan — iOS Developer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&family=Orbitron:wght@700;900&display=swap" rel="stylesheet"/>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -21,6 +21,7 @@
     --muted: #4a7a8a;
     --serif: 'Instrument Serif', serif;
     --mono: 'DM Mono', monospace;
+    --future: 'Orbitron', sans-serif;
   }
 
   html { scroll-behavior: smooth; }
@@ -123,16 +124,20 @@
   }
 
   .hero-name {
-    font-family: var(--serif);
-    font-size: clamp(56px, 9vw, 140px);
-    line-height: 0.92;
-    letter-spacing: -0.02em;
+    font-family: var(--future);
+    font-size: clamp(36px, 6.5vw, 100px);
+    line-height: 1.05;
+    letter-spacing: 0.04em;
+    font-weight: 900;
+    text-transform: uppercase;
     opacity: 0;
     animation: fadeUp 0.9s ease forwards 0.4s;
   }
   .hero-name em {
-    font-style: italic;
+    font-style: normal;
     color: var(--accent);
+    display: block;
+    text-shadow: 0 0 40px rgba(0,229,255,0.4);
   }
 
   .hero-desc {
@@ -464,6 +469,98 @@
     gap: 16px;
   }
 
+  /* ─── EXPERIENCE ─── */
+  .exp-item {
+    border: 1px solid var(--border);
+    background: var(--surface);
+    padding: 40px 44px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+  .exp-item::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: linear-gradient(180deg, var(--accent), var(--accent2));
+    opacity: 0.7;
+  }
+  .exp-item:hover { border-color: rgba(0,229,255,0.3); }
+
+  .exp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .exp-role {
+    font-family: var(--serif);
+    font-size: 28px;
+    line-height: 1.1;
+    color: var(--text);
+  }
+  .exp-company {
+    font-size: 13px;
+    color: var(--accent);
+    margin-top: 6px;
+    letter-spacing: 0.05em;
+  }
+  .exp-type { color: var(--muted); }
+  .exp-date {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: right;
+  }
+  .exp-loc {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    opacity: 0.6;
+    margin-top: 4px;
+    text-align: right;
+  }
+  .exp-context {
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .exp-bullets {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 32px;
+  }
+  @media (max-width: 768px) {
+    .exp-bullets { grid-template-columns: 1fr; }
+    .exp-header { flex-direction: column; }
+    .exp-date, .exp-loc { text-align: left; }
+  }
+  .exp-bullets li {
+    font-size: 12px;
+    line-height: 1.7;
+    color: #8faebb;
+    padding-left: 16px;
+    position: relative;
+  }
+  .exp-bullets li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    opacity: 0.6;
+    font-size: 10px;
+  }
+  .exp-bullets li strong { color: var(--text); font-weight: 400; }
+
   /* ─── SCROLL REVEAL ─── */
   .reveal {
     opacity: 0;
@@ -574,7 +671,7 @@
         <span class="stat-lbl">Repositories</span>
       </div>
       <div class="stat-box">
-        <span class="stat-num">1 Year+</span>
+        <span class="stat-num">1yr+</span>
         <span class="stat-lbl">Professional Exp.</span>
       </div>
       <div class="stat-box">
@@ -606,8 +703,6 @@
       </div>
     </div>
     <div class="exp-context">Bangladesh's largest job portal — serving millions of users across the country.</div>
-    <br>
-    <br>
     <ul class="exp-bullets">
       <li>Contributed to a production-level iOS app used by a large-scale user base</li>
       <li>Improved UI components with <strong>Swift & UIKit</strong> to enhance usability and experience</li>
@@ -665,45 +760,45 @@
   <h2 class="section-title reveal">Selected<br><em style="font-family:var(--serif);font-style:italic;">Work</em></h2>
   <div class="projects-grid">
 
-    <a href="https://github.com/RaajuPahlowan/iOS-basic-web-browser" target="_blank" class="project-card reveal">
+    <a href="https://github.com/RaajuPahlowan/RetroMovie" target="_blank" class="project-card reveal">
       <div class="project-lang"><span class="lang-dot swift"></span> Swift · iOS</div>
-      <div class="project-name">iOS Basic Web Browser</div>
-      <div class="project-desc">A fast, easy-to-use web browser built natively for iOS devices. Clean interface, smooth browsing experience.</div>
+      <div class="project-name">RetroMovie</div>
+      <div class="project-desc">A high-performance movie discovery app. Search films, TV series, and cast members instantly — rate titles, build watchlists, and follow trending content daily.</div>
+      <div class="project-arrow">View on GitHub <span>→</span></div>
+    </a>
+
+    <a href="https://github.com/RaajuPahlowan/Tactile-Navigator-Glove" target="_blank" class="project-card reveal">
+      <div class="project-lang"><span class="lang-dot swift"></span> Swift · Hardware · Accessibility</div>
+      <div class="project-name">Tactile Navigator Glove</div>
+      <div class="project-desc">A wearable assistive device for the visually impaired. Ultrasonic sensors detect obstacles in real-time; vibration motors and a Bluetooth-connected iOS app provide tactile and voice feedback via Google TTS.</div>
+      <div class="project-arrow">View on GitHub <span>→</span></div>
+    </a>
+
+    <a href="https://github.com/RaajuPahlowan/iOS-Sightseer" target="_blank" class="project-card reveal">
+      <div class="project-lang"><span class="lang-dot swift"></span> SwiftUI · iOS</div>
+      <div class="project-name">Sightseer</div>
+      <div class="project-desc">A travel recommendation iOS app built with SwiftUI. Discover destinations, explore sights, and plan trips with a clean, native mobile experience.</div>
+      <div class="project-arrow">View on GitHub <span>→</span></div>
+    </a>
+
+    <a href="https://github.com/RaajuPahlowan/Bookish-Book-Exchange-Platform" target="_blank" class="project-card reveal">
+      <div class="project-lang"><span class="lang-dot" style="background:#7a3fbf"></span> PHP · JavaScript · SQL</div>
+      <div class="project-name">Bookish</div>
+      <div class="project-desc">A peer-to-peer book exchange platform. Users can list, browse, request, and swap books within their community — promoting sustainable reading habits through sharing.</div>
       <div class="project-arrow">View on GitHub <span>→</span></div>
     </a>
 
     <a href="https://github.com/RaajuPahlowan/Swift-Playground-Solutions" target="_blank" class="project-card reveal">
       <div class="project-lang"><span class="lang-dot swift"></span> Swift · Algorithms</div>
       <div class="project-name">Swift Playground Solutions</div>
-      <div class="project-desc">A curated collection of Swift Playground exercises and algorithm solutions — coding practice with elegance. ★ 3</div>
+      <div class="project-desc">A curated collection of Swift algorithm exercises and playground solutions — elegant problem-solving and data structure practice in pure Swift. ★ 3</div>
       <div class="project-arrow">View on GitHub <span>→</span></div>
     </a>
 
     <a href="https://github.com/RaajuPahlowan/iOS-Assumptions-of-winning" target="_blank" class="project-card reveal">
       <div class="project-lang"><span class="lang-dot swift"></span> Swift · iOS</div>
       <div class="project-name">Assumptions of Winning</div>
-      <div class="project-desc">An iOS application built in Swift exploring probability and outcome prediction through clean UI interactions.</div>
-      <div class="project-arrow">View on GitHub <span>→</span></div>
-    </a>
-
-    <a href="https://github.com/RaajuPahlowan/JAVA-Bank-Management-App" target="_blank" class="project-card reveal">
-      <div class="project-lang"><span class="lang-dot java"></span> Java · Console</div>
-      <div class="project-name">Bank Management App</div>
-      <div class="project-desc">A comprehensive console-based Java application for managing bank accounts, transactions, and customer records.</div>
-      <div class="project-arrow">View on GitHub <span>→</span></div>
-    </a>
-
-    <a href="https://github.com/RaajuPahlowan/JAVA-Employee-Management-System" target="_blank" class="project-card reveal">
-      <div class="project-lang"><span class="lang-dot java"></span> Java · Console</div>
-      <div class="project-name">Employee Management System</div>
-      <div class="project-desc">A full-featured employee management console application built in Java with clean OOP architecture.</div>
-      <div class="project-arrow">View on GitHub <span>→</span></div>
-    </a>
-
-    <a href="https://github.com/RaajuPahlowan/JAVA-Player-Management-System" target="_blank" class="project-card reveal">
-      <div class="project-lang"><span class="lang-dot java"></span> Java · Console</div>
-      <div class="project-name">Player Management System</div>
-      <div class="project-desc">A console-based Java system for managing sports players — rosters, stats, and records handled with precision.</div>
+      <div class="project-desc">An iOS app exploring probability and outcome prediction through clean, interactive UI — a playful experiment in game theory and chance.</div>
       <div class="project-arrow">View on GitHub <span>→</span></div>
     </a>
 
