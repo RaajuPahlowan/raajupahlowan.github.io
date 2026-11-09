@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Raaju Pahlowan — iOS Developer</title>
+<title>Raaju Pahlowan — Mobile App Developer (iOS)</title>
+<meta name="description" content="Native iOS developer (Swift, SwiftUI, UIKit) with production experience on Bdjobs.com's national job platform app."/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&family=Orbitron:wght@700;900&display=swap" rel="stylesheet"/>
@@ -145,7 +146,7 @@
     font-size: 13px;
     line-height: 1.9;
     color: var(--muted);
-    max-width: 340px;
+    max-width: 380px;
     opacity: 0;
     animation: fadeUp 0.9s ease forwards 0.7s;
   }
@@ -483,6 +484,7 @@
     overflow: hidden;
     transition: border-color 0.3s;
   }
+  .exp-item + .exp-item { margin-top: 2px; }
   .exp-item::before {
     content: '';
     position: absolute;
@@ -569,6 +571,17 @@
   }
   .exp-bullets li strong { color: var(--text); font-weight: 400; }
 
+  /* ─── EDUCATION ─── */
+  .edu-sub {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    opacity: 0.6;
+    margin: 40px 0 16px;
+  }
+  .edu-role { font-size: 18px; }
+
   /* ─── SCROLL REVEAL ─── */
   .reveal {
     opacity: 0;
@@ -638,6 +651,7 @@
     <li><a href="#experience">Experience</a></li>
     <li><a href="#skills">Skills</a></li>
     <li><a href="#projects">Work</a></li>
+    <li><a href="#education">Education</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
 </nav>
@@ -646,11 +660,11 @@
 <section class="hero">
   <div class="hero-glow"></div>
   <div class="hero-glow2"></div>
-  <p class="hero-tag">iOS Developer · UX Obsessed · Dhaka, BD</p>
+  <p class="hero-tag">Mobile App Developer (iOS) · Dhaka, BD</p>
   <h1 class="hero-name">Raaju<br><em>Pahlowan</em></h1>
   <p class="hero-desc">
-    Crafting refined iOS experiences with obsessive attention to detail.
-    Swift enthusiast. Clean code advocate.
+    Native iOS developer building reliable, user-friendly apps in Swift, SwiftUI and UIKit.
+    Production experience on a national-scale job platform.
   </p>
   <div class="hero-links">
     <a href="https://github.com/RaajuPahlowan" target="_blank" class="hero-link">GitHub</a>
@@ -667,11 +681,11 @@
   <h2 class="section-title reveal">Professional Summary</h2>
   <div class="about-grid">
     <div class="about-text reveal">
-      <p>I'm <strong>Raaju Pahlowan</strong>, an iOS developer with hands-on experience designing, developing, and maintaining <strong>production-level iOS applications</strong> using Swift and UIKit.</p>
+      <p>I'm <strong>Raaju Pahlowan</strong>, a native iOS developer (<strong>Swift, SwiftUI, UIKit, Xcode</strong>) with production experience on <strong>Bdjobs.com's high-volume national job platform app</strong>.</p>
       <br/>
-      <p>Currently at <strong>Bdjobs.com Ltd.</strong> — Bangladesh's largest job portal — I work with the Mobile Application Development Team on real-world features and system improvements, from UI enhancements to REST API integration.</p>
+      <p>I work across <strong>REST API integration, push notifications, crash and performance troubleshooting</strong>, and building responsive mobile experiences with <strong>MVC/MVVM and clean architecture</strong>. Day to day, I'm in an Agile/Scrum team with Git workflows and code reviews.</p>
       <br/>
-      <p>I'm passionate about building <strong>clean, user-friendly mobile apps</strong> and continuously growing my craft. Every interaction matters, every pixel counts.</p>
+      <p>Beyond work, I've built and shipped several end-to-end iOS apps on my own, from media streaming with <strong>AVFoundation/Combine</strong> to <strong>Bluetooth hardware integration</strong>. I'm looking to contribute to enterprise mobile projects in <strong>banking, fintech, telecom and insurance</strong>.</p>
     </div>
     <div class="about-stats reveal">
       <div class="stat-box">
@@ -702,7 +716,7 @@
   <div class="exp-item reveal">
     <div class="exp-header">
       <div class="exp-left">
-        <div class="exp-role">iOS Developer</div>
+        <div class="exp-role">Jr. Mobile App Developer (iOS)</div>
         <div class="exp-company">Bdjobs.com Ltd. <span class="exp-type">· Full-time</span></div>
       </div>
       <div class="exp-meta">
@@ -710,16 +724,13 @@
         <div class="exp-loc">Dhaka, Bangladesh · On-site</div>
       </div>
     </div>
-    <div class="exp-context">Bangladesh's largest job portal — serving millions of users across the country.</div>
+    <div class="exp-context">Bangladesh's national job platform — a high-volume native iOS app serving a large user base.</div>
     <ul class="exp-bullets">
-      <li>Contributed to a production-level iOS app used by a large-scale user base</li>
-      <li>Improved UI components with <strong>Swift & UIKit</strong> to enhance usability and experience</li>
-      <li>Built features for the Skills section, Customized CV Module, Company Insights and Saved Jobs</li>
-      <li>Integrated and maintained <strong>RESTful APIs</strong> using <strong>Alamofire</strong> for dynamic data</li>
-      <li>Managed API updates ensuring stability and backward compatibility</li>
-      <li>Debugged and resolved performance issues across the application</li>
-      <li>Worked in an <strong>agile team</strong> with backend devs, designers, and QA engineers</li>
-      <li>Used <strong>Git</strong> for version control, participated in code reviews and daily stand-ups</li>
+      <li>Design, develop, and maintain features for a production native iOS app (<strong>Swift, UIKit</strong>), using both <strong>Storyboard/Auto Layout</strong> and <strong>programmatic UI</strong></li>
+      <li>Delivered the <strong>Company Insight, Saved Jobs, Skills section, and Customised CV Module</strong> features in line with business and UX requirements, and implemented <strong>push notification</strong> support</li>
+      <li>Integrate and maintain <strong>REST APIs (Alamofire)</strong> for real-time job listing and application data, handling asynchronous responses and JSON parsing end to end</li>
+      <li>Troubleshoot and resolve application <strong>crashes, performance issues, and production defects</strong> as part of day-to-day feature work</li>
+      <li>Collaborate with backend engineers and designers in an <strong>Agile/Scrum</strong> team; participate in code reviews and technical discussions using clean <strong>Git-based workflows</strong></li>
     </ul>
   </div>
 </section>
@@ -730,38 +741,65 @@
   <h2 class="section-title reveal">Skills &<br><em style="font-family:var(--future);font-style:normal;color:var(--accent);">Technologies</em></h2>
 
   <div class="reveal">
-    <p class="skills-group-label">iOS & Mobile</p>
+    <p class="skills-group-label">Native iOS</p>
     <div class="skills-row">
       <div class="skill-pill"><span>Swift</span></div>
       <div class="skill-pill"><span>SwiftUI</span></div>
       <div class="skill-pill"><span>UIKit</span></div>
+      <div class="skill-pill"><span>iOS SDK</span></div>
       <div class="skill-pill"><span>Xcode</span></div>
-      <div class="skill-pill"><span>REST API</span></div>
-      <div class="skill-pill"><span>Apple SDK</span></div>
-      <div class="skill-pill"><span>Alamofire</span></div>
-      <div class="skill-pill"><span>CocoaPods</span></div>
+      <div class="skill-pill"><span>Auto Layout</span></div>
+      <div class="skill-pill"><span>Storyboard & Programmatic UI</span></div>
+      <div class="skill-pill"><span>Objective-C</span></div>
+      <div class="skill-pill"><span>Combine</span></div>
       <div class="skill-pill"><span>AVFoundation</span></div>
+      <div class="skill-pill"><span>ARKit</span></div>
+      <div class="skill-pill"><span>Core Data</span></div>
     </div>
   </div>
 
   <div class="reveal">
-    <p class="skills-group-label">Backend & Languages</p>
+    <p class="skills-group-label">Architecture & Practices</p>
     <div class="skills-row">
-      <div class="skill-pill"><span>Java</span></div>
-      <div class="skill-pill"><span>PHP</span></div>
-     <div class="skill-pill"><span>C#</span></div>
-      <div class="skill-pill"><span>Algorithms</span></div>
-      <div class="skill-pill"><span>Data Structures</span></div>
-    </div>
-  </div>
-
-  <div class="reveal">
-    <p class="skills-group-label">Design & Tools</p>
-    <div class="skills-row">
-      <div class="skill-pill"><span>UX Design</span></div>
-      <div class="skill-pill"><span>Git & GitHub</span></div>
+      <div class="skill-pill"><span>MVC</span></div>
+      <div class="skill-pill"><span>MVVM</span></div>
       <div class="skill-pill"><span>Clean Architecture</span></div>
-      <div class="skill-pill"><span>Figma</span></div>
+      <div class="skill-pill"><span>Mobile App Lifecycle</span></div>
+      <div class="skill-pill"><span>Code Review</span></div>
+      <div class="skill-pill"><span>Agile & Scrum</span></div>
+      <div class="skill-pill"><span>SDLC</span></div>
+      <div class="skill-pill"><span>STLC</span></div>
+    </div>
+  </div>
+
+  <div class="reveal">
+    <p class="skills-group-label">Networking, Data & Integration</p>
+    <div class="skills-row">
+      <div class="skill-pill"><span>RESTful APIs</span></div>
+      <div class="skill-pill"><span>Alamofire</span></div>
+      <div class="skill-pill"><span>JSON</span></div>
+      <div class="skill-pill"><span>Push Notifications</span></div>
+      <div class="skill-pill"><span>Firebase</span></div>
+      <div class="skill-pill"><span>Firestore</span></div>
+      <div class="skill-pill"><span>Realm</span></div>
+      <div class="skill-pill"><span>SQLite</span></div>
+      <div class="skill-pill"><span>MySQL</span></div>
+      <div class="skill-pill"><span>Bluetooth</span></div>
+      <div class="skill-pill"><span>Third-party SDKs</span></div>
+    </div>
+  </div>
+
+  <div class="reveal">
+    <p class="skills-group-label">Tools & Other Languages</p>
+    <div class="skills-row">
+      <div class="skill-pill"><span>Git & GitHub</span></div>
+      <div class="skill-pill"><span>CocoaPods</span></div>
+      <div class="skill-pill"><span>Java</span></div>
+      <div class="skill-pill"><span>JavaScript</span></div>
+      <div class="skill-pill"><span>PHP</span></div>
+      <div class="skill-pill"><span>SQL</span></div>
+      <div class="skill-pill"><span>HTML</span></div>
+      <div class="skill-pill"><span>CSS</span></div>
     </div>
   </div>
 </section>
@@ -772,17 +810,31 @@
   <h2 class="section-title reveal">iOS<br><em style="font-family:var(--future);font-style:normal;color:var(--accent);">Projects</em></h2>
   <div class="projects-grid">
 
+    <div class="project-card reveal">
+      <div class="project-lang"><span class="lang-dot swift"></span> SwiftUI · MVVM · AVPlayer · Combine</div>
+      <div class="project-name">FmMusic — Live Internet Radio</div>
+      <div class="project-desc">A live, genre-based streaming radio app consuming the Radio Browser REST API, recreating a classic "no skip" FM listening experience. Built on a maintainable MVVM structure with a dedicated audio-service layer (Combine-published playback state) and lock screen controls, enforcing business rules outside the UI layer.</div>
+      <div class="project-arrow">Personal Project</div>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-lang"><span class="lang-dot swift"></span> SwiftUI · MVVM</div>
+      <div class="project-name">Lawyer Seeker</div>
+      <div class="project-desc">A native SwiftUI app for searching and filtering lawyers by specialization, location, and experience, with detailed credential views and in-app consultation booking.</div>
+      <div class="project-arrow">Personal Project</div>
+    </div>
+
     <a href="https://github.com/RaajuPahlowan/RetroMovie" target="_blank" class="project-card reveal">
-      <div class="project-lang"><span class="lang-dot swift"></span> Swift · iOS</div>
+      <div class="project-lang"><span class="lang-dot swift"></span> Swift · UIKit · REST APIs</div>
       <div class="project-name">RetroMovie</div>
-      <div class="project-desc">A high-performance movie discovery app. Search films, TV series, and cast members instantly — rate titles, build watchlists, and follow trending content daily.</div>
+      <div class="project-desc">A movie discovery app with cast details, watchlists, and daily trending feeds, backed by REST API integration.</div>
       <div class="project-arrow">View on GitHub <span>→</span></div>
     </a>
 
     <a href="https://github.com/RaajuPahlowan/Tactile-Navigator-Glove" target="_blank" class="project-card reveal">
-      <div class="project-lang"><span class="lang-dot swift"></span> Swift · Hardware · Accessibility</div>
+      <div class="project-lang"><span class="lang-dot swift"></span> Swift · Bluetooth · Accessibility</div>
       <div class="project-name">Tactile Navigator Glove</div>
-      <div class="project-desc">A wearable assistive device for the visually impaired. Ultrasonic sensors detect obstacles in real-time; vibration motors and a Bluetooth-connected iOS app provide tactile and voice feedback via Google TTS.</div>
+      <div class="project-desc">A wearable assistive glove for visually impaired users. An iOS controller app pairs with ultrasonic sensors over Bluetooth to deliver real-time obstacle feedback via speech (AVSpeechSynthesizer) and haptics.</div>
       <div class="project-arrow">View on GitHub <span>→</span></div>
     </a>
 
@@ -817,11 +869,52 @@
   </div>
 </section>
 
+<!-- EDUCATION -->
+<section id="education">
+  <p class="section-label reveal">005</p>
+  <h2 class="section-title reveal">Education &<br><em style="font-family:var(--future);font-style:normal;color:var(--accent);">Certifications</em></h2>
+
+  <div class="exp-item reveal">
+    <div class="exp-header">
+      <div class="exp-left">
+        <div class="exp-role edu-role">B.Sc. in Computer Science and Engineering</div>
+        <div class="exp-company">American International University-Bangladesh</div>
+      </div>
+      <div class="exp-meta">
+        <div class="exp-date">Graduated 2026</div>
+        <div class="exp-loc">Dhaka, Bangladesh</div>
+      </div>
+    </div>
+  </div>
+
+  <p class="edu-sub reveal">Certifications</p>
+
+  <div class="exp-item reveal">
+    <div class="exp-header" style="margin-bottom:0;">
+      <div class="exp-left">
+        <div class="exp-role edu-role">iOS Development Bootcamp</div>
+        <div class="exp-company">Udemy</div>
+      </div>
+      <div class="exp-meta"><div class="exp-date">2023</div></div>
+    </div>
+  </div>
+
+  <div class="exp-item reveal">
+    <div class="exp-header" style="margin-bottom:0;">
+      <div class="exp-left">
+        <div class="exp-role edu-role">Introduction to User Experience Design</div>
+        <div class="exp-company">Georgia Institute of Technology</div>
+      </div>
+      <div class="exp-meta"><div class="exp-date">2023</div></div>
+    </div>
+  </div>
+</section>
+
 <!-- CONTACT -->
 <section id="contact">
-  <p class="section-label reveal" style="justify-content:center;">005</p>
+  <p class="section-label reveal" style="justify-content:center;">006</p>
   <h2 class="section-title reveal">Let's build<br><em style="font-family:var(--future);font-style:normal;color:var(--text);">something great</em></h2>
-  <p class="contact-sub reveal">Open to iOS roles, freelance projects, and interesting collaborations.</p>
+  <p class="contact-sub reveal">Open to iOS roles and enterprise mobile projects in banking, fintech, telecom and insurance.</p>
   <div class="contact-links reveal">
     <a href="mailto:raajupahlowan@gmail.com" class="contact-btn primary">Send an Email</a>
     <a href="https://www.linkedin.com/in/pahlowan/" target="_blank" class="contact-btn">LinkedIn</a>
@@ -831,7 +924,7 @@
 </section>
 
 <footer>
-  <span>Raaju Pahlowan · iOS Developer</span>
+  <span>Raaju Pahlowan · Mobile App Developer (iOS)</span>
   <span>Dhaka, Bangladesh · 2026</span>
 </footer>
 
