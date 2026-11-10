@@ -4,575 +4,782 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Raaju Pahlowan — Mobile App Developer (iOS)</title>
-<meta name="description" content="Native iOS developer (Swift, SwiftUI, UIKit) with production experience on Bdjobs.com's national job platform app.">
+<title>Raaju Pahlowan | iOS Engineer</title>
+<meta name="description" content="Portfolio of Raaju Pahlowan, a native iOS developer (Swift, SwiftUI, UIKit) with production experience on Bdjobs.com's national job platform app.">
+<meta name="theme-color" content="#00ff7f">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+ 
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+ 
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
-    --bg: hsl(0, 0%, 7%);
-    --card: hsl(240, 2%, 12%);
-    --card-2: hsl(240, 2%, 13%);
-    --border: hsl(0, 0%, 22%);
-    --nav-bg: hsla(240, 1%, 17%, 0.75);
-    --accent: hsl(45, 100%, 72%);
-    --text: hsl(0, 0%, 100%);
-    --text-2: hsl(0, 0%, 84%);
-    --muted: hsl(0, 0%, 60%);
-    --shadow: 0 16px 30px hsla(0, 0%, 0%, 0.25);
+    --accent: #00ff7f;            /* change this one value to re-theme the page AND the 3D scene */
+    --bg: #040706;
+    --text: #e8f3ee;
+    --muted: #8aa399;
+    --glass: rgba(7, 12, 10, 0.64);
+    --line: rgba(0, 255, 127, 0.16);
+    --sans: 'Space Grotesk', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
   }
   html { scroll-behavior: smooth; }
   body {
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--sans);
     background: var(--bg);
-    color: var(--text-2);
+    color: var(--text);
     line-height: 1.6;
-    padding: 60px 15px;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
   }
+  body.locked { overflow: hidden; height: 100vh; }
   a { color: inherit; text-decoration: none; }
   ul { list-style: none; }
-  svg { display: block; }
+  ::selection { background: var(--accent); color: #031009; }
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: rgba(0,255,127,.35); border-radius: 8px; }
  
-  /* ─── LAYOUT ─── */
-  .layout {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    gap: 25px;
-    align-items: flex-start;
-  }
+  #bg { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; }
+  .no-webgl body { background: radial-gradient(ellipse at 70% 30%, rgba(0,255,127,.12), transparent 60%), var(--bg); }
+  .no-webgl #bg { display: none; }
  
-  /* ─── SIDEBAR ─── */
-  .sidebar {
-    width: 330px;
-    flex-shrink: 0;
-    position: sticky;
-    top: 30px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 60px 30px 30px;
-    box-shadow: var(--shadow);
+  /* ─── LOADER ─── */
+  #loader {
+    position: fixed; inset: 0; z-index: 100;
+    background: var(--bg);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 18px; text-align: center; padding: 24px;
+    transition: opacity .8s ease, visibility .8s;
   }
-  .avatar {
-    width: 150px; height: 150px;
-    margin: 0 auto 20px;
-    border-radius: 30px;
-    background: linear-gradient(135deg, hsl(0,0%,16%), hsl(0,0%,8%));
-    border: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    overflow: hidden;
-    font-size: 54px; font-weight: 600; color: var(--accent);
-    letter-spacing: 2px;
+  #loader.hide { opacity: 0; visibility: hidden; pointer-events: none; }
+  .ld-top { font-family: var(--mono); font-size: 12px; letter-spacing: .35em; color: var(--accent); }
+  .ld-msg { font-family: var(--mono); font-size: 13px; color: var(--muted); min-height: 20px; }
+  .ld-pct { font-size: clamp(64px, 14vw, 140px); font-weight: 700; line-height: 1; letter-spacing: -.04em; }
+  .ld-pct small { font-size: .3em; color: var(--accent); margin-left: 6px; letter-spacing: 0; }
+  .ld-bar { width: min(320px, 70vw); height: 2px; background: rgba(255,255,255,.08); overflow: hidden; border-radius: 2px; }
+  .ld-bar i { display: block; height: 100%; width: 0; background: var(--accent); box-shadow: 0 0 14px var(--accent); }
+  .ld-go {
+    margin-top: 8px; background: none; color: var(--accent);
+    border: 1px solid var(--accent); border-radius: 999px;
+    font-family: var(--mono); font-size: 13px; letter-spacing: .2em; text-transform: uppercase;
+    padding: 12px 28px; cursor: pointer;
+    opacity: 0; transform: translateY(8px); pointer-events: none;
+    transition: opacity .5s, transform .5s, background .2s, color .2s;
   }
-  .avatar img { width: 100%; height: 100%; object-fit: cover; }
-  .name {
-    text-align: center;
-    color: var(--text);
-    font-size: 24px;
-    font-weight: 500;
-    letter-spacing: -0.25px;
-    margin-bottom: 14px;
-  }
-  .title-chip {
-    display: block;
-    width: fit-content;
-    margin: 0 auto;
-    background: hsl(240, 1%, 17%);
-    color: var(--text);
-    font-size: 12px;
-    font-weight: 300;
-    padding: 5px 18px;
-    border-radius: 8px;
-    text-align: center;
-  }
-  .sep { height: 1px; background: var(--border); margin: 32px 0; }
-  .contacts { display: grid; gap: 16px; }
-  .contact { display: flex; align-items: center; gap: 16px; min-width: 0; }
-  .icon-box {
-    width: 46px; height: 46px; flex-shrink: 0;
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    color: var(--accent);
-    background: linear-gradient(135deg, hsl(0,0%,25%) 0%, hsla(0,0%,25%,0) 50%), hsl(240,2%,13%);
-    box-shadow: 0 8px 20px hsla(0,0%,0%,0.25);
-    position: relative;
-  }
-  .icon-box::before {
-    content: ''; position: absolute; inset: 1px; border-radius: inherit;
-    background: var(--card);
-    z-index: 0;
-  }
-  .icon-box svg { position: relative; z-index: 1; width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-  .contact-info { min-width: 0; }
-  .contact-label { font-size: 11px; color: var(--muted); text-transform: uppercase; line-height: 1.3; }
-  .contact-value { font-size: 13px; color: var(--text); font-weight: 300; overflow-wrap: anywhere; }
-  .socials { display: flex; justify-content: center; gap: 18px; margin-top: 30px; }
-  .socials a { color: var(--muted); transition: color .2s; }
-  .socials a:hover { color: var(--accent); }
-  .socials svg { width: 18px; height: 18px; fill: currentColor; }
+  .ld-go.show { opacity: 1; transform: none; pointer-events: auto; animation: pulse 1.8s ease-in-out infinite; }
+  .ld-go:hover { background: var(--accent); color: #031009; }
+  @keyframes pulse { 50% { box-shadow: 0 0 0 8px rgba(0,255,127,.08); } }
  
-  /* ─── MAIN ─── */
-  .main {
-    flex: 1;
-    min-width: 0;
-    position: relative;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 30px;
-    min-height: 600px;
-    box-shadow: var(--shadow);
+  /* ─── TOP BAR + DOTS ─── */
+  .top {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 22px 6vw;
+    background: linear-gradient(to bottom, rgba(4,7,6,.8), transparent);
   }
+  .logo { font-weight: 700; font-size: 20px; letter-spacing: -.02em; }
+  .logo span { color: var(--accent); }
+  .top nav { display: flex; gap: 30px; font-size: 14px; color: var(--muted); }
+  .top nav a { transition: color .2s; }
+  .top nav a:hover { color: var(--accent); }
+  .dots { position: fixed; right: 22px; top: 50%; transform: translateY(-50%); z-index: 50; display: grid; gap: 14px; }
+  .dots a { width: 9px; height: 9px; border-radius: 50%; border: 1px solid var(--muted); display: block; transition: all .3s; }
+  .dots a.active { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 12px var(--accent); transform: scale(1.3); }
  
-  /* top-right tab nav */
-  .navbar {
-    position: absolute;
-    top: -1px; right: -1px;
-    background: var(--nav-bg);
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--border);
-    border-radius: 0 20px;
-    padding: 0 20px;
-    display: flex;
-    gap: 30px;
-    z-index: 10;
+  /* ─── SECTIONS ─── */
+  main { position: relative; z-index: 10; }
+  .sec { min-height: 100vh; padding: 110px 6vw 70px; display: flex; align-items: center; }
+  .sec.right { justify-content: flex-end; }
+  .sec.center { justify-content: center; }
+  .panel { width: 100%; max-width: 640px; }
+  .panel.wide { max-width: 1180px; }
+  .glass {
+    background: var(--glass);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--line);
+    border-radius: 22px; padding: 36px;
+    box-shadow: 0 24px 70px rgba(0,0,0,.5);
   }
-  .nav-link {
-    background: none; border: 0; cursor: pointer;
-    font-family: inherit; font-size: 14px; font-weight: 400;
-    color: var(--text-2);
-    padding: 20px 7px;
-    transition: color .2s;
-  }
-  .nav-link:hover { color: var(--muted); }
-  .nav-link.active { color: var(--accent); }
+  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .3em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+  h2.title { font-size: clamp(30px, 4.4vw, 46px); font-weight: 700; letter-spacing: -.03em; line-height: 1.1; margin-bottom: 26px; }
  
-  .page { display: none; animation: fade .45s ease both; }
-  .page.active { display: block; }
-  @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  /* hero */
+  .hero h1 { font-size: clamp(40px, 7vw, 84px); font-weight: 700; letter-spacing: -.04em; line-height: 1.02; }
+  .grad { background: linear-gradient(90deg, var(--accent), #3c8bfd); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero .role { font-family: var(--mono); font-size: 14px; color: var(--accent); margin: 18px 0 12px; letter-spacing: .08em; }
+  .hero p.lead { font-size: clamp(16px, 1.6vw, 19px); color: var(--muted); max-width: 520px; }
+  .btns { display: flex; gap: 14px; flex-wrap: wrap; margin: 30px 0 44px; }
+  .btn {
+    display: inline-block; padding: 13px 28px; border-radius: 999px; font-weight: 600; font-size: 15px; cursor: pointer;
+    border: 1px solid var(--accent); font-family: inherit;
+    transition: transform .2s, box-shadow .2s, background .2s, color .2s;
+  }
+  .btn.solid { background: var(--accent); color: #031009; box-shadow: 0 0 30px rgba(0,255,127,.3); }
+  .btn.ghost { background: rgba(0,0,0,.25); color: var(--accent); }
+  .btn:hover { transform: translateY(-3px); }
+  .btn.ghost:hover { background: var(--accent); color: #031009; }
+  .stats { display: flex; gap: 38px; flex-wrap: wrap; }
+  .stat b { display: block; font-size: 34px; font-weight: 700; color: var(--accent); line-height: 1.1; }
+  .stat span { font-size: 13px; color: var(--muted); }
+  .scroll-hint { position: absolute; left: 6vw; bottom: 28px; font-family: var(--mono); font-size: 11px; letter-spacing: .3em; color: var(--muted); text-transform: uppercase; }
+  .scroll-hint::after { content: ''; display: inline-block; width: 40px; height: 1px; background: var(--muted); vertical-align: middle; margin-left: 12px; }
+  .hero { position: relative; }
  
-  h2.page-title {
-    color: var(--text);
-    font-size: 32px;
-    font-weight: 600;
-    position: relative;
-    padding-bottom: 14px;
-    margin-bottom: 28px;
-  }
-  h2.page-title::after {
-    content: ''; position: absolute; left: 0; bottom: 0;
-    width: 40px; height: 5px; border-radius: 3px;
-    background: var(--accent);
-  }
-  h3.section-title {
-    color: var(--text);
-    font-size: 24px;
-    font-weight: 600;
-    margin: 36px 0 22px;
-  }
-  .about-text p { font-size: 15px; font-weight: 300; line-height: 1.8; margin-bottom: 16px; }
-  .about-text strong { color: var(--text); font-weight: 400; }
- 
-  /* inner cards (services, projects) */
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  .inner-card {
-    position: relative;
-    border-radius: 14px;
-    background: linear-gradient(135deg, hsl(0,0%,25%) 0%, hsla(0,0%,25%,0) 50%), hsl(240,2%,13%);
-    box-shadow: 0 16px 30px hsla(0,0%,0%,0.25);
-    z-index: 1;
-  }
-  .inner-card::before {
-    content: ''; position: absolute; inset: 1px; border-radius: inherit;
-    background: var(--card); z-index: -1;
-  }
-  .service { padding: 26px; display: flex; gap: 20px; align-items: flex-start; }
-  .service-icon { color: var(--accent); flex-shrink: 0; margin-top: 4px; }
-  .service-icon svg { width: 38px; height: 38px; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
-  .service h4 { color: var(--text); font-size: 17px; font-weight: 500; margin-bottom: 6px; }
-  .service p { font-size: 14px; font-weight: 300; line-height: 1.7; color: var(--text-2); }
+  /* journey */
+  .job h3 { font-size: 22px; font-weight: 600; }
+  .job .co { color: var(--accent); font-weight: 500; margin-top: 2px; }
+  .job .meta { font-family: var(--mono); font-size: 12px; color: var(--muted); margin: 6px 0 14px; }
+  .job .note { font-size: 14px; font-style: italic; color: var(--muted); padding-bottom: 16px; margin-bottom: 16px; border-bottom: 1px solid var(--line); }
+  .bullets { display: grid; gap: 11px; }
+  .bullets li { position: relative; padding-left: 20px; font-size: 14.5px; color: #b7cbc2; line-height: 1.65; }
+  .bullets li::before { content: '▹'; position: absolute; left: 0; color: var(--accent); }
+  .bullets b { color: var(--text); font-weight: 500; }
  
   /* skills */
-  .skill-group { margin-bottom: 22px; }
-  .skill-group h4 { font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 1.2px; color: var(--accent); margin-bottom: 12px; }
-  .chips { display: flex; flex-wrap: wrap; gap: 10px; }
+  .sg { margin-bottom: 20px; }
+  .sg:last-child { margin-bottom: 0; }
+  .sg h4 { font-family: var(--mono); font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; font-weight: 500; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
   .chip {
-    font-size: 13px; font-weight: 300; color: var(--text);
-    background: hsl(240, 1%, 17%);
-    border: 1px solid var(--border);
-    padding: 6px 14px; border-radius: 10px;
-    transition: border-color .2s, color .2s;
+    font-size: 13px; padding: 6px 13px; border-radius: 10px;
+    background: rgba(0,255,127,.06); border: 1px solid var(--line); color: #cfe3d9;
+    transition: all .2s;
   }
-  .chip:hover { border-color: var(--accent); color: var(--accent); }
+  .chip:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
  
-  /* resume timeline */
-  .timeline { margin-bottom: 10px; }
-  .t-item { position: relative; padding: 0 0 30px 30px; }
-  .t-item::before {
-    content: ''; position: absolute; left: 0; top: 7px;
-    width: 9px; height: 9px; border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 0 4px var(--border);
+  /* projects */
+  .proj-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .card {
+    display: flex; flex-direction: column; min-height: 230px;
+    background: var(--glass); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--line); border-radius: 18px; padding: 26px;
+    transition: border-color .3s, box-shadow .3s, transform .15s ease-out;
+    transform-style: preserve-3d; will-change: transform;
   }
-  .t-item::after {
-    content: ''; position: absolute; left: 4px; top: 22px; bottom: -2px;
-    width: 1px; background: var(--border);
-  }
-  .t-item:last-child { padding-bottom: 0; }
-  .t-item:last-child::after { display: none; }
-  .t-item h4 { color: var(--text); font-size: 16px; font-weight: 500; line-height: 1.4; margin-bottom: 4px; }
-  .t-meta { color: var(--accent); font-size: 13px; font-weight: 400; margin-bottom: 6px; }
-  .t-meta span { color: var(--muted); font-weight: 300; }
-  .t-note { font-size: 13px; font-style: italic; color: var(--muted); margin-bottom: 14px; }
-  .t-item ul.bullets { display: grid; gap: 10px; }
-  .t-item ul.bullets li { position: relative; padding-left: 18px; font-size: 14px; font-weight: 300; line-height: 1.7; }
-  .t-item ul.bullets li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-size: 12px; top: 1px; }
-  .t-item strong { color: var(--text); font-weight: 400; }
+  a.card:hover, .card.tilt:hover { border-color: rgba(0,255,127,.55); box-shadow: 0 0 40px rgba(0,255,127,.12); }
+  .card .tag { font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+  .card h4 { font-size: 19px; font-weight: 600; margin-bottom: 8px; }
+  .card p { font-size: 14px; color: var(--muted); flex: 1; line-height: 1.65; }
+  .card .go { margin-top: 16px; font-size: 13px; color: var(--accent); font-weight: 500; }
+  .card .go.plain { color: var(--muted); }
  
-  /* portfolio */
-  .project { padding: 26px; display: flex; flex-direction: column; min-height: 220px; transition: transform .25s; }
-  a.project:hover { transform: translateY(-4px); }
-  .p-tag { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 10px; }
-  .project h4 { color: var(--text); font-size: 17px; font-weight: 500; margin-bottom: 8px; }
-  .project p { font-size: 14px; font-weight: 300; line-height: 1.7; flex: 1; }
-  .p-link { margin-top: 16px; font-size: 13px; color: var(--accent); }
-  .p-link.plain { color: var(--muted); }
+  /* education */
+  .edu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .edu-grid .card { min-height: 0; }
  
   /* contact */
-  .form { display: grid; gap: 18px; }
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .form { display: grid; gap: 14px; margin-top: 8px; }
   .form input, .form textarea {
-    width: 100%;
-    background: transparent;
-    color: var(--text);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 13px 20px;
-    font-family: inherit; font-size: 14px; font-weight: 400;
-    outline: none;
-    transition: border-color .2s;
+    width: 100%; background: rgba(0,0,0,.35); color: var(--text);
+    border: 1px solid var(--line); border-radius: 12px; padding: 13px 16px;
+    font-family: inherit; font-size: 15px; outline: none; transition: border-color .2s;
   }
-  .form textarea { min-height: 130px; resize: vertical; }
-  .form input::placeholder, .form textarea::placeholder { color: var(--muted); font-weight: 500; }
+  .form textarea { min-height: 120px; resize: vertical; }
+  .form input::placeholder, .form textarea::placeholder { color: #5f776c; }
   .form input:focus, .form textarea:focus { border-color: var(--accent); }
-  .btn {
-    justify-self: end;
-    display: inline-flex; align-items: center; gap: 10px;
-    background: linear-gradient(135deg, hsl(0,0%,25%) 0%, hsla(0,0%,25%,0) 50%), hsl(240,2%,13%);
-    color: var(--accent);
-    font-family: inherit; font-size: 14px; font-weight: 500;
-    padding: 13px 26px; border: 0; border-radius: 14px; cursor: pointer;
-    box-shadow: 0 16px 30px hsla(0,0%,0%,0.25);
-    transition: background .2s;
-  }
-  .btn:hover { background: hsl(45, 100%, 72%); color: hsl(0,0%,7%); }
-  .contact-links { display: flex; flex-wrap: wrap; gap: 22px; margin-top: 30px; font-size: 14px; }
-  .contact-links a { color: var(--text-2); transition: color .2s; }
-  .contact-links a:hover { color: var(--accent); }
+  .form .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .direct { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 24px; font-size: 14px; }
+  .direct a { color: var(--muted); transition: color .2s; }
+  .direct a:hover { color: var(--accent); }
+  footer { position: relative; z-index: 10; text-align: center; padding: 30px 20px 40px; font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: .08em; }
  
-  /* ─── RESPONSIVE ─── */
-  @media (max-width: 1024px) {
-    body { padding: 15px 12px 90px; }
-    .layout { flex-direction: column; gap: 15px; }
-    .sidebar { position: static; width: 100%; padding: 30px 24px; }
-    .avatar { width: 110px; height: 110px; font-size: 40px; border-radius: 26px; }
-    .contacts { grid-template-columns: 1fr 1fr; }
-    .main { width: 100%; padding: 26px 20px; min-height: 0; }
-    .navbar {
-      position: fixed; top: auto; bottom: 0; left: 0; right: 0;
-      border-radius: 14px 14px 0 0;
-      justify-content: center; gap: 12px; padding: 0 10px;
-      border-bottom: 0;
-    }
-    .nav-link { padding: 16px 10px; font-size: 13px; }
+  /* reveal */
+  .reveal { opacity: 0; transform: translateY(34px); transition: opacity .9s ease, transform .9s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+ 
+  @media (max-width: 980px) {
+    .proj-grid, .edu-grid { grid-template-columns: 1fr 1fr; }
+    .dots { display: none; }
   }
-  @media (max-width: 640px) {
-    .grid-2, .form-row { grid-template-columns: 1fr; }
-    .contacts { grid-template-columns: 1fr; }
-    h2.page-title { font-size: 26px; }
-    .btn { justify-self: stretch; justify-content: center; }
+  @media (max-width: 700px) {
+    .sec { padding: 90px 16px 50px; }
+    .glass { padding: 24px 20px; }
+    .top { padding: 16px; }
+    .top nav { gap: 16px; font-size: 13px; }
+    .top nav a:not(:last-child) { display: none; }
+    .proj-grid, .edu-grid, .form .row { grid-template-columns: 1fr; }
+    .scroll-hint { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+    html { scroll-behavior: auto; }
   }
 </style>
 </head>
-<body>
+<body class="locked">
  
-<div class="layout">
- 
-  <!-- ═════════ SIDEBAR ═════════ -->
-  <aside class="sidebar">
-    <div class="avatar">
-      <!-- To use a photo, replace "RP" with: <img src="your-photo.jpg" alt="Raaju Pahlowan"> -->
-      RP
-    </div>
-    <h1 class="name">Raaju Pahlowan</h1>
-    <span class="title-chip">Mobile App Developer (iOS)</span>
- 
-    <div class="sep"></div>
- 
-    <div class="contacts">
-      <div class="contact">
-        <div class="icon-box"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></div>
-        <div class="contact-info">
-          <p class="contact-label">Email</p>
-          <a class="contact-value" href="mailto:raajupahlowan@gmail.com">raajupahlowan@gmail.com</a>
-        </div>
-      </div>
-      <div class="contact">
-        <div class="icon-box"><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11a7 7 0 0114 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
-        <div class="contact-info">
-          <p class="contact-label">Location</p>
-          <p class="contact-value">Dhaka, Bangladesh</p>
-        </div>
-      </div>
-    </div>
- 
-    <div class="socials">
-      <a href="https://github.com/RaajuPahlowan" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 24 24"><path d="M12 .5a11.5 11.5 0 00-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 015.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0012 .5z"/></svg></a>
-      <a href="https://www.linkedin.com/in/pahlowan/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 11-.01 5 2.5 2.5 0 01.01-5zM3 9.75h4V21H3zM9.5 9.75h3.8v1.54h.05c.53-1 1.82-2.04 3.75-2.04 4 0 4.75 2.63 4.75 6.05V21h-4v-5.1c0-1.22-.02-2.78-1.7-2.78-1.7 0-1.96 1.32-1.96 2.69V21h-4z"/></svg></a>
-      <a href="https://twitter.com/RaajuPahlowan" target="_blank" rel="noopener" aria-label="X / Twitter"><svg viewBox="0 0 24 24"><path d="M18.244 2H21.5l-7.19 8.22L22.75 22h-6.62l-5.18-6.77L4.99 22H1.73l7.7-8.8L1.25 2h6.79l4.68 6.19L18.24 2zm-1.16 18h1.83L7.01 3.9H5.05z"/></svg></a>
-    </div>
-  </aside>
- 
-  <!-- ═════════ MAIN ═════════ -->
-  <main class="main">
- 
-    <nav class="navbar">
-      <button class="nav-link active" data-page="about">About</button>
-      <button class="nav-link" data-page="resume">Resume</button>
-      <button class="nav-link" data-page="portfolio">Portfolio</button>
-      <button class="nav-link" data-page="contact">Contact</button>
-    </nav>
- 
-    <!-- ───── ABOUT ───── -->
-    <article class="page active" id="about">
-      <h2 class="page-title">About Me</h2>
-      <div class="about-text">
-  <p>iOS developer with hands on production experience in Swift, SwiftUI and UIKit, currently shipping and maintaining features for Bdjobs.com’s national job platform application.</p>
-  <p>Comfortable across the day to day UIKit stack, Auto Layout, custom UI components, table/collection views, and REST API integration with a working foundation in MVC/MVVM and clean architecture.</p>
-  <p>Looking to bring that production experience as a Software Engineer (iOS), building reliable, maintainable features as part of a fast moving product team.</p>
+<!-- Loader -->
+<div id="loader">
+  <div class="ld-top">RAAJU PAHLOWAN · PORTFOLIO</div>
+  <div class="ld-msg" id="ldMsg">setting up the studio…</div>
+  <div class="ld-pct"><span id="ldPct">00</span><small>%</small></div>
+  <div class="ld-bar"><i id="ldBar"></i></div>
+  <button class="ld-go" id="ldGo" type="button">Click to continue</button>
 </div>
  
-      <h3 class="section-title">What I'm Doing</h3>
-      <div class="grid-2">
-        <div class="inner-card service">
-          <div class="service-icon"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></div>
-          <div><h4>Native iOS Apps</h4><p>Swift, SwiftUI and UIKit, with Storyboard/Auto Layout and programmatic UI, structured with MVC and MVVM.</p></div>
-        </div>
-        <div class="inner-card service">
-          <div class="service-icon"><svg viewBox="0 0 24 24"><path d="M6 8h12l-3-3M18 16H6l3 3"/></svg></div>
-          <div><h4>API & Networking</h4><p>REST integration with Alamofire for real-time data, handling async responses and JSON parsing end to end.</p></div>
-        </div>
-        <div class="inner-card service">
-          <div class="service-icon"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg></div>
-          <div><h4>Auth & Security</h4><p>Token interceptors, single-flight refresh with automatic retry, Keychain storage and JWT expiry handling.</p></div>
-        </div>
-        <div class="inner-card service">
-          <div class="service-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg></div>
-          <div><h4>Debugging & Quality</h4><p>Crash and performance troubleshooting, production defects, test harnesses and code reviews.</p></div>
-        </div>
-      </div>
+<canvas id="bg"></canvas>
  
-      <h3 class="section-title">Skills</h3>
-      <div class="skill-group">
+<header class="top">
+  <a href="#hero" class="logo">Raaju<span>.</span></a>
+  <nav>
+    <a href="#journey">Journey</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+<aside class="dots" id="dots"></aside>
+ 
+<main>
+ 
+  <!-- HERO -->
+  <section class="sec hero" id="hero" data-cam>
+    <div class="panel">
+      <p class="eyebrow reveal">Mobile App Developer (iOS)</p>
+      <h1 class="reveal">Hi, I'm <span class="grad">Raaju Pahlowan</span></h1>
+      <p class="role reveal">// A detail-obsessed iOS engineer</p>
+      <p class="lead reveal">Building reliable, fast native apps in Swift, SwiftUI and UIKit, from a national-scale job platform to Bluetooth hardware companions.</p>
+      <div class="btns reveal">
+        <a class="btn solid" href="#contact">Get in Touch</a>
+        <a class="btn ghost" href="#projects">View Projects</a>
+      </div>
+      <div class="stats reveal">
+        <div class="stat"><b>9</b><span>iOS projects built</span></div>
+        <div class="stat"><b>1+</b><span>Years in production</span></div>
+        <div class="stat"><b>1</b><span>National job platform</span></div>
+      </div>
+    </div>
+    <div class="scroll-hint">Scroll</div>
+  </section>
+ 
+  <!-- JOURNEY -->
+  <section class="sec right" id="journey" data-cam>
+    <div class="panel glass reveal">
+      <p class="eyebrow">My Journey</p>
+      <div class="job">
+        <h3>Jr. Mobile App Developer (iOS)</h3>
+        <p class="co">Bdjobs.com Ltd. · Full-time</p>
+        <p class="meta">Nov 2025 – Present · Dhaka, Bangladesh</p>
+        <p class="note">Bangladesh's national job platform: a high-volume native iOS app serving a large user base.</p>
+        <ul class="bullets">
+          <li>Design, develop, and maintain features for a production native iOS app (<b>Swift, UIKit</b>), using both <b>Storyboard/Auto Layout</b> and <b>programmatic UI</b></li>
+          <li>Delivered the <b>Company Insight, Saved Jobs, Skills section, and Customised CV Module</b> features in line with business and UX requirements, and implemented <b>push notification</b> support</li>
+          <li>Integrate and maintain <b>REST APIs (Alamofire)</b> for real-time job listing and application data, handling asynchronous responses and JSON parsing end to end</li>
+          <li>Owned the <b>authentication networking layer</b>: an <b>Alamofire interceptor</b> handling user and public (logged-out) tokens, <b>single-flight token refresh</b> with automatic retry on 401, <b>Keychain</b> token storage, proactive public-token renewal from <b>JWT expiry</b>, and a <b>feature flag</b> for safe rollback</li>
+          <li>Debugged login/logout <b>token handover issues</b> and built a <b>test harness</b> to verify token refresh behavior</li>
+          <li>Troubleshoot and resolve application <b>crashes, performance issues, and production defects</b> as part of day-to-day feature work</li>
+          <li>Collaborate with backend engineers and designers in an <b>Agile/Scrum</b> team; participate in code reviews and technical discussions using clean <b>Git-based workflows</b></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- SKILLS -->
+  <section class="sec" id="skills" data-cam>
+    <div class="panel glass reveal">
+      <p class="eyebrow">My Skillset</p>
+      <div class="sg">
         <h4>Native iOS</h4>
         <div class="chips">
           <span class="chip">Swift</span><span class="chip">SwiftUI</span><span class="chip">UIKit</span><span class="chip">iOS SDK</span><span class="chip">Xcode</span><span class="chip">Auto Layout</span><span class="chip">Storyboard & Programmatic UI</span><span class="chip">Objective-C</span><span class="chip">Combine</span><span class="chip">AVFoundation</span><span class="chip">ARKit</span><span class="chip">Core Data</span>
         </div>
       </div>
-      <div class="skill-group">
+      <div class="sg">
         <h4>Architecture & Practices</h4>
         <div class="chips">
           <span class="chip">MVC</span><span class="chip">MVVM</span><span class="chip">Clean Architecture</span><span class="chip">Mobile App Lifecycle</span><span class="chip">Code Review</span><span class="chip">Agile & Scrum</span><span class="chip">SDLC</span><span class="chip">STLC</span>
         </div>
       </div>
-      <div class="skill-group">
+      <div class="sg">
         <h4>Networking, Data & Integration</h4>
         <div class="chips">
           <span class="chip">RESTful APIs</span><span class="chip">Alamofire</span><span class="chip">JSON</span><span class="chip">Alamofire Interceptors</span><span class="chip">Token Refresh & Retry</span><span class="chip">JWT</span><span class="chip">Keychain</span><span class="chip">Feature Flags</span><span class="chip">Push Notifications</span><span class="chip">Firebase</span><span class="chip">Firestore</span><span class="chip">Realm</span><span class="chip">SQLite</span><span class="chip">MySQL</span><span class="chip">Bluetooth</span><span class="chip">Third-party SDKs</span>
         </div>
       </div>
-      <div class="skill-group">
+      <div class="sg">
         <h4>Tools & Other Languages</h4>
         <div class="chips">
           <span class="chip">Git & GitHub</span><span class="chip">CocoaPods</span><span class="chip">Java</span><span class="chip">JavaScript</span><span class="chip">PHP</span><span class="chip">SQL</span><span class="chip">HTML</span><span class="chip">CSS</span>
         </div>
       </div>
-    </article>
+    </div>
+  </section>
  
-    <!-- ───── RESUME ───── -->
-    <article class="page" id="resume">
-      <h2 class="page-title">Resume</h2>
+  <!-- PROJECTS -->
+  <section class="sec center" id="projects" data-cam>
+    <div class="panel wide">
+      <p class="eyebrow reveal">Featured Projects</p>
+      <h2 class="title reveal">Some of my notable work</h2>
+      <div class="proj-grid">
  
-      <h3 class="section-title" style="margin-top:0">Experience</h3>
-      <div class="timeline">
-        <div class="t-item">
-          <h4>Jr. Mobile App Developer (iOS)</h4>
-          <p class="t-meta">Bdjobs.com Ltd. · Full-time <span>— Nov 2025 – Present · Dhaka, Bangladesh</span></p>
-          <p class="t-note">Bangladesh's national job platform: a high-volume native iOS app serving a large user base.</p>
-          <ul class="bullets">
-            <li>Design, develop, and maintain features for a production native iOS app (<strong>Swift, UIKit</strong>), using both <strong>Storyboard/Auto Layout</strong> and <strong>programmatic UI</strong></li>
-            <li>Delivered the <strong>Company Insight, Saved Jobs, Skills section, and Customised CV Module</strong> features in line with business and UX requirements, and implemented <strong>push notification</strong> support</li>
-            <li>Integrate and maintain <strong>REST APIs (Alamofire)</strong> for real-time job listing and application data, handling asynchronous responses and JSON parsing end to end</li>
-            <li>Owned the <strong>authentication networking layer</strong>: an <strong>Alamofire interceptor</strong> handling user and public (logged-out) tokens, <strong>single-flight token refresh</strong> with automatic retry on 401, <strong>Keychain</strong> token storage, proactive public-token renewal from <strong>JWT expiry</strong>, and a <strong>feature flag</strong> for safe rollback</li>
-            <li>Debugged login/logout <strong>token handover issues</strong> and built a <strong>test harness</strong> to verify token refresh behavior</li>
-            <li>Troubleshoot and resolve application <strong>crashes, performance issues, and production defects</strong> as part of day-to-day feature work</li>
-            <li>Collaborate with backend engineers and designers in an <strong>Agile/Scrum</strong> team; participate in code reviews and technical discussions using clean <strong>Git-based workflows</strong></li>
-          </ul>
-        </div>
-      </div>
- 
-      <h3 class="section-title">Education</h3>
-      <div class="timeline">
-        <div class="t-item">
-          <h4>B.Sc. in Computer Science and Engineering</h4>
-          <p class="t-meta">American International University-Bangladesh <span>— Graduated 2026 · Dhaka</span></p>
-        </div>
-      </div>
- 
-      <h3 class="section-title">Certificates</h3>
-      <div class="timeline">
-        <div class="t-item">
-          <h4>iOS Development Bootcamp</h4>
-          <p class="t-meta">Udemy <span>— 2023</span></p>
-        </div>
-        <div class="t-item">
-          <h4>Introduction to User Experience Design</h4>
-          <p class="t-meta">Georgia Institute of Technology <span>— 2023</span></p>
-        </div>
-      </div>
-    </article>
- 
-    <!-- ───── PORTFOLIO ───── -->
-    <article class="page" id="portfolio">
-      <h2 class="page-title">Portfolio</h2>
-      <div class="grid-2">
- 
-        <a class="inner-card project" href="https://github.com/RaajuPahlowan/Hullor-iOS" target="_blank" rel="noopener">
-          <p class="p-tag">iOS · Events · News</p>
-          <h4>Hullor</h4>
+        <a class="card tilt reveal" href="https://github.com/RaajuPahlowan/Hullor-iOS" target="_blank" rel="noopener">
+          <p class="tag">iOS · Events · News</p><h4>Hullor</h4>
           <p>Brings the latest events, entertainment, event tickets and important news updates together in one simple app. Stay informed, stay connected, and never miss what's happening in Dhaka city.</p>
-          <span class="p-link">View on GitHub →</span>
+          <span class="go">View on GitHub →</span>
         </a>
  
-        <div class="inner-card project">
-          <p class="p-tag">SwiftUI · MVVM · AVPlayer · Combine</p>
-          <h4>FmMusic — Live Internet Radio</h4>
-          <p>A live, genre-based streaming radio app consuming the Radio Browser REST API, recreating a classic "no skip" FM listening experience. Built on a maintainable MVVM structure with a dedicated audio-service layer (Combine-published playback state) and lock screen controls, enforcing business rules outside the UI layer.</p>
-          <span class="p-link plain">Personal Project</span>
+        <div class="card tilt reveal">
+          <p class="tag">SwiftUI · MVVM · AVPlayer · Combine</p><h4>FmMusic — Live Internet Radio</h4>
+          <p>A live, genre-based streaming radio app consuming the Radio Browser REST API, recreating a classic "no skip" FM listening experience. Built on MVVM with a dedicated audio-service layer (Combine-published playback state) and lock screen controls, enforcing business rules outside the UI layer.</p>
+          <span class="go plain">Personal Project</span>
         </div>
  
-        <div class="inner-card project">
-          <p class="p-tag">SwiftUI · MVVM</p>
-          <h4>Lawyer Seeker</h4>
+        <div class="card tilt reveal">
+          <p class="tag">SwiftUI · MVVM</p><h4>Lawyer Seeker</h4>
           <p>A native SwiftUI app for searching and filtering lawyers by specialization, location, and experience, with detailed credential views and in-app consultation booking.</p>
-          <span class="p-link plain">Personal Project</span>
+          <span class="go plain">Personal Project</span>
         </div>
  
-        <a class="inner-card project" href="https://github.com/RaajuPahlowan/RetroMovie" target="_blank" rel="noopener">
-          <p class="p-tag">Swift · UIKit · REST APIs</p>
-          <h4>RetroMovie</h4>
+        <a class="card tilt reveal" href="https://github.com/RaajuPahlowan/RetroMovie" target="_blank" rel="noopener">
+          <p class="tag">Swift · UIKit · REST APIs</p><h4>RetroMovie</h4>
           <p>A movie discovery app with cast details, watchlists, and daily trending feeds, backed by REST API integration.</p>
-          <span class="p-link">View on GitHub →</span>
+          <span class="go">View on GitHub →</span>
         </a>
  
-        <a class="inner-card project" href="https://github.com/RaajuPahlowan/Tactile-Navigator-Glove" target="_blank" rel="noopener">
-          <p class="p-tag">Swift · Bluetooth · Accessibility</p>
-          <h4>Tactile Navigator Glove</h4>
+        <a class="card tilt reveal" href="https://github.com/RaajuPahlowan/Tactile-Navigator-Glove" target="_blank" rel="noopener">
+          <p class="tag">Swift · Bluetooth · Accessibility</p><h4>Tactile Navigator Glove</h4>
           <p>A wearable assistive glove for visually impaired users. An iOS controller app pairs with ultrasonic sensors over Bluetooth to deliver real-time obstacle feedback via speech (AVSpeechSynthesizer) and haptics.</p>
-          <span class="p-link">View on GitHub →</span>
+          <span class="go">View on GitHub →</span>
         </a>
  
-        <a class="inner-card project" href="https://github.com/RaajuPahlowan/iOS-Sightseer" target="_blank" rel="noopener">
-          <p class="p-tag">SwiftUI · iOS</p>
-          <h4>Sightseer</h4>
+        <a class="card tilt reveal" href="https://github.com/RaajuPahlowan/iOS-Sightseer" target="_blank" rel="noopener">
+          <p class="tag">SwiftUI · iOS</p><h4>Sightseer</h4>
           <p>A travel recommendation iOS app built with SwiftUI. Discover destinations, explore sights, and plan trips with a clean, native mobile experience.</p>
-          <span class="p-link">View on GitHub →</span>
+          <span class="go">View on GitHub →</span>
         </a>
  
-        <a class="inner-card project" href="https://github.com/RaajuPahlowan/Bookish-Book-Exchange-Platform" target="_blank" rel="noopener">
-          <p class="p-tag">PHP · JavaScript · SQL</p>
-          <h4>Bookish</h4>
+        <a class="card tilt reveal" href="https://github.com/RaajuPahlowan/Bookish-Book-Exchange-Platform" target="_blank" rel="noopener">
+          <p class="tag">PHP · JavaScript · SQL</p><h4>Bookish</h4>
           <p>A peer-to-peer book exchange platform. Users can list, browse, request, and swap books within their community, promoting sustainable reading habits through sharing.</p>
-          <span class="p-link">View on GitHub →</span>
+          <span class="go">View on GitHub →</span>
         </a>
  
-        <a class="inner-card project" href="https://github.com/RaajuPahlowan/Swift-Playground-Solutions" target="_blank" rel="noopener">
-          <p class="p-tag">Swift · Algorithms</p>
-          <h4>Swift Playground Solutions</h4>
+        <a class="card tilt reveal" href="https://github.com/RaajuPahlowan/Swift-Playground-Solutions" target="_blank" rel="noopener">
+          <p class="tag">Swift · Algorithms</p><h4>Swift Playground Solutions</h4>
           <p>A curated collection of Swift algorithm exercises and playground solutions: problem-solving and data structure practice in pure Swift. ★ 3</p>
-          <span class="p-link">View on GitHub →</span>
+          <span class="go">View on GitHub →</span>
         </a>
  
-        <a class="inner-card project" href="https://github.com/RaajuPahlowan/iOS-Assumptions-of-winning" target="_blank" rel="noopener">
-          <p class="p-tag">Swift · iOS</p>
-          <h4>Assumptions of Winning</h4>
+        <a class="card tilt reveal" href="https://github.com/RaajuPahlowan/iOS-Assumptions-of-winning" target="_blank" rel="noopener">
+          <p class="tag">Swift · iOS</p><h4>Assumptions of Winning</h4>
           <p>An iOS app exploring probability and outcome prediction through clean, interactive UI, a playful experiment in game theory and chance.</p>
-          <span class="p-link">View on GitHub →</span>
+          <span class="go">View on GitHub →</span>
         </a>
  
       </div>
-    </article>
+    </div>
+  </section>
  
-    <!-- ───── CONTACT ───── -->
-    <article class="page" id="contact">
-      <h2 class="page-title">Contact</h2>
-      <p class="about-text" style="margin-bottom:26px;font-size:15px;font-weight:300;">Open to iOS roles and enterprise mobile projects. Send a message and I'll get back to you.</p>
- 
-      <form class="form" id="contactForm">
-        <div class="form-row">
-          <input id="cName" type="text" placeholder="Full name" required>
-          <input id="cEmail" type="email" placeholder="Email address" required>
+  <!-- EDUCATION -->
+  <section class="sec center" id="education">
+    <div class="panel wide">
+      <p class="eyebrow reveal">Education & Certificates</p>
+      <h2 class="title reveal">Where I learned</h2>
+      <div class="edu-grid">
+        <div class="card tilt reveal">
+          <p class="tag">Education · Graduated 2026</p><h4>B.Sc. in Computer Science and Engineering</h4>
+          <p>American International University-Bangladesh, Dhaka</p>
         </div>
-        <textarea id="cMsg" placeholder="Your message" required></textarea>
-        <button class="btn" type="submit">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg>
-          Send Message
-        </button>
-      </form>
+        <div class="card tilt reveal">
+          <p class="tag">Udemy · 2023</p><h4>iOS Development Bootcamp</h4>
+        </div>
+        <div class="card tilt reveal">
+          <p class="tag">Georgia Institute of Technology · 2023</p><h4>Introduction to User Experience Design</h4>
+        </div>
+      </div>
+    </div>
+  </section>
  
-      <div class="contact-links">
+  <!-- CONTACT -->
+  <section class="sec right" id="contact" data-cam>
+    <div class="panel glass reveal">
+      <p class="eyebrow">Get In Touch</p>
+      <h2 class="title" style="margin-bottom:8px">Let's build something great together</h2>
+      <p style="color:var(--muted);font-size:15px">Open to iOS roles and enterprise mobile projects in banking, fintech, telecom and insurance.</p>
+      <form class="form" id="contactForm">
+        <div class="row">
+          <input id="cName" type="text" placeholder="Name *" required>
+          <input id="cEmail" type="email" placeholder="Email *" required>
+        </div>
+        <input id="cSubject" type="text" placeholder="Subject">
+        <textarea id="cMsg" placeholder="Message *" required></textarea>
+        <button class="btn solid" type="submit">Send Message</button>
+      </form>
+      <div class="direct">
         <a href="mailto:raajupahlowan@gmail.com">Email</a>
         <a href="https://www.linkedin.com/in/pahlowan/" target="_blank" rel="noopener">LinkedIn</a>
         <a href="https://github.com/RaajuPahlowan" target="_blank" rel="noopener">GitHub</a>
         <a href="https://twitter.com/RaajuPahlowan" target="_blank" rel="noopener">X / Twitter</a>
       </div>
-    </article>
+    </div>
+  </section>
  
-  </main>
-</div>
+</main>
  
-<script>
-  // Tab navigation
-  const links = document.querySelectorAll('.nav-link');
-  const pages = document.querySelectorAll('.page');
-  function show(id) {
-    if (!document.getElementById(id)) id = 'about';
-    pages.forEach(p => p.classList.toggle('active', p.id === id));
-    links.forEach(l => l.classList.toggle('active', l.dataset.page === id));
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+<footer>From Dhaka, Bangladesh · Open to iOS roles · © 2026 Raaju Pahlowan</footer>
+ 
+<script type="module">
+import * as THREE from 'three';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+ 
+const $ = s => document.querySelector(s);
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const accentHex = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#00ff7f';
+const ACCENT = new THREE.Color(accentHex);
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const smooth = f => f * f * (3 - 2 * f);
+const easeOut = f => 1 - Math.pow(1 - f, 3);
+ 
+/* ───────── scroll sections / dots ───────── */
+const camSecs = [...document.querySelectorAll('[data-cam]')];
+const allSecs = [...document.querySelectorAll('.sec[id]')];
+let centers = [];
+function measure() {
+  centers = camSecs.map(s => { const r = s.getBoundingClientRect(); return r.top + scrollY + r.height / 2; });
+}
+function scrollT() {
+  const y = scrollY + innerHeight / 2, n = centers.length;
+  if (!n || y <= centers[0]) return 0;
+  if (y >= centers[n - 1]) return 1;
+  for (let i = 0; i < n - 1; i++) {
+    if (y < centers[i + 1]) {
+      const f = (y - centers[i]) / (centers[i + 1] - centers[i]);
+      return (i + smooth(clamp(f, 0, 1))) / (n - 1);
+    }
   }
-  links.forEach(l => l.addEventListener('click', () => {
-    show(l.dataset.page);
-    history.replaceState(null, '', '#' + l.dataset.page);
-  }));
-  show(location.hash.slice(1) || 'about');
+  return 1;
+}
+const dotsEl = $('#dots');
+allSecs.forEach(s => {
+  const a = document.createElement('a');
+  a.href = '#' + s.id; a.title = s.id[0].toUpperCase() + s.id.slice(1); a.dataset.id = s.id;
+  dotsEl.appendChild(a);
+});
+function updateDots() {
+  const mid = scrollY + innerHeight / 2;
+  let cur = allSecs[0].id;
+  allSecs.forEach(s => { if (s.offsetTop <= mid) cur = s.id; });
+  dotsEl.querySelectorAll('a').forEach(a => a.classList.toggle('active', a.dataset.id === cur));
+}
+addEventListener('scroll', updateDots, { passive: true });
  
-  // Contact form: opens the visitor's email app with the message prefilled
-  document.getElementById('contactForm').addEventListener('submit', e => {
-    e.preventDefault();
-    const name = document.getElementById('cName').value.trim();
-    const email = document.getElementById('cEmail').value.trim();
-    const msg = document.getElementById('cMsg').value.trim();
-    const subject = encodeURIComponent('Portfolio inquiry from ' + name);
-    const body = encodeURIComponent(msg + '\n\n— ' + name + ' (' + email + ')');
-    window.location.href = 'mailto:raajupahlowan@gmail.com?subject=' + subject + '&body=' + body;
+/* ───────── reveal + tilt + form ───────── */
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); }), { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+ 
+if (!reduce) {
+  document.querySelectorAll('.tilt').forEach(el => {
+    el.addEventListener('pointermove', e => {
+      if (e.pointerType !== 'mouse') return;
+      const r = el.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+      el.style.transform = `perspective(900px) rotateX(${(-y * 8).toFixed(2)}deg) rotateY(${(x * 8).toFixed(2)}deg) translateZ(6px)`;
+    });
+    el.addEventListener('pointerleave', () => { el.style.transform = ''; });
   });
-</script>
+}
  
+$('#contactForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const name = $('#cName').value.trim(), email = $('#cEmail').value.trim(), msg = $('#cMsg').value.trim();
+  const subject = $('#cSubject').value.trim() || ('Portfolio inquiry from ' + name);
+  location.href = 'mailto:raajupahlowan@gmail.com?subject=' + encodeURIComponent(subject) +
+    '&body=' + encodeURIComponent(msg + '\n\n— ' + name + ' (' + email + ')');
+});
+ 
+/* ───────── 3D scene ───────── */
+let renderer = null;
+try {
+  renderer = new THREE.WebGLRenderer({ canvas: $('#bg'), antialias: true, powerPreference: 'high-performance' });
+} catch (err) {
+  document.documentElement.classList.add('no-webgl');
+}
+ 
+let introK = reduce ? 1 : 0;
+let introRunning = false;
+let tick = () => {};
+ 
+if (renderer) {
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.15;
+  renderer.setClearColor(0x040706);
+ 
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0x040706, 0.045);
+  const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 100);
+ 
+  /* lights */
+  scene.add(new THREE.AmbientLight(0x88aa99, 0.45));
+  const key = new THREE.DirectionalLight(0xffffff, 0.7); key.position.set(4, 8, 6); scene.add(key);
+  const glow = new THREE.PointLight(ACCENT, 28, 14, 2); glow.position.set(0, 2.3, 1); scene.add(glow);
+  const blue = new THREE.PointLight(0x3c8bfd, 20, 18, 2); blue.position.set(-4, 3.2, 3); scene.add(blue);
+ 
+  /* floor */
+  const floor = new THREE.Mesh(
+    new THREE.PlaneGeometry(80, 80),
+    new THREE.MeshStandardMaterial({ color: 0x070e0b, roughness: 0.55, metalness: 0.5 })
+  );
+  floor.rotation.x = -Math.PI / 2; scene.add(floor);
+  const grid = new THREE.GridHelper(80, 80, ACCENT, 0x0c2a1b);
+  grid.position.y = 0.01; grid.material.transparent = true; grid.material.opacity = 0.28; scene.add(grid);
+ 
+  /* desk */
+  const dark = new THREE.MeshStandardMaterial({ color: 0x10171a, roughness: 0.5, metalness: 0.6 });
+  const trim = new THREE.MeshStandardMaterial({ color: 0x021008, emissive: ACCENT, emissiveIntensity: 1.6 });
+  const desk = new THREE.Group(); scene.add(desk);
+  const top = new THREE.Mesh(new THREE.BoxGeometry(5.4, 0.12, 2.3), dark); top.position.y = 1.1; desk.add(top);
+  const edge = new THREE.Mesh(new THREE.BoxGeometry(5.4, 0.025, 0.025), trim); edge.position.set(0, 1.05, 1.15); desk.add(edge);
+  [[-2.5, -1], [2.5, -1], [-2.5, 1], [2.5, 1]].forEach(([x, z]) => {
+    const leg = new THREE.Mesh(new THREE.BoxGeometry(0.1, 1.05, 0.1), dark); leg.position.set(x, 0.53, z); desk.add(leg);
+  });
+ 
+  /* monitor with live code texture */
+  const bezel = new THREE.Mesh(new THREE.BoxGeometry(2.7, 1.62, 0.08), new THREE.MeshStandardMaterial({ color: 0x080c0b, roughness: 0.4, metalness: 0.8 }));
+  bezel.position.set(0, 2.25, -0.6); desk.add(bezel);
+  const stand = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.08, 0.5, 16), dark); stand.position.set(0, 1.4, -0.6); desk.add(stand);
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.55, 0.04, 32), dark); base.position.set(0, 1.18, -0.6); desk.add(base);
+ 
+  const CODE = [
+    'final class AuthInterceptor: RequestInterceptor {',
+    '',
+    '  // attach user or public token',
+    '  func adapt(_ request: URLRequest, ...) {',
+    '    var req = request',
+    '    let token = store.currentToken()',
+    '    req.setValue("Bearer \\(token)",',
+    '                 forHTTPHeaderField: "Authorization")',
+    '    completion(.success(req))',
+    '  }',
+    '',
+    '  // single-flight refresh, retry once on 401',
+    '  func retry(_ request: Request, ...) {',
+    '    guard response?.statusCode == 401 else {',
+    '      return completion(.doNotRetry)',
+    '    }',
+    '    refresher.refreshOnce { ok in',
+    '      completion(ok ? .retry : .doNotRetry)',
+    '    }',
+    '  }',
+    '}'
+  ];
+  const KW = new Set(['final', 'class', 'func', 'var', 'let', 'guard', 'else', 'return', 'if', 'in', 'self']);
+  const sc = document.createElement('canvas'); sc.width = 1024; sc.height = 640;
+  const sx = sc.getContext('2d');
+  const screenTex = new THREE.CanvasTexture(sc); screenTex.colorSpace = THREE.SRGBColorSpace; screenTex.anisotropy = 4;
+  const totalChars = CODE.reduce((a, l) => a + l.length + 1, 0);
+  function drawLine(line, x, y) {
+    const toks = line.match(/"[^"]*"|\/\/.*$|[A-Za-z_][A-Za-z0-9_]*|\s+|./g) || [];
+    for (const t of toks) {
+      let col = '#cfe3d9';
+      if (t.startsWith('//')) col = '#5f776c';
+      else if (t[0] === '"') col = '#f0c674';
+      else if (KW.has(t)) col = accentHex;
+      else if (/^[A-Z]/.test(t)) col = '#7fd1ff';
+      sx.fillStyle = col; sx.fillText(t, x, y);
+      x += sx.measureText(t).width;
+    }
+    return x;
+  }
+  function drawScreen(time) {
+    sx.fillStyle = '#050a08'; sx.fillRect(0, 0, 1024, 640);
+    sx.fillStyle = '#0b1410'; sx.fillRect(0, 0, 1024, 46);
+    ['#ff5f57', '#febc2e', '#28c840'].forEach((c, i) => { sx.fillStyle = c; sx.beginPath(); sx.arc(26 + i * 24, 23, 7, 0, 7); sx.fill(); });
+    sx.font = '20px ui-monospace, Menlo, Consolas, monospace'; sx.fillStyle = '#8aa399'; sx.textBaseline = 'middle';
+    sx.fillText('AuthInterceptor.swift', 130, 24);
+    sx.font = '21px ui-monospace, Menlo, Consolas, monospace';
+    let remaining = Math.floor((time * 28) % (totalChars + 60));
+    let cx = 70, cy = 76;
+    for (let i = 0; i < CODE.length; i++) {
+      const line = CODE[i];
+      sx.fillStyle = '#34493f'; sx.fillText(String(i + 1).padStart(2, ' '), 22, cy);
+      const shown = line.slice(0, Math.max(0, remaining));
+      cx = drawLine(shown, 70, cy);
+      if (remaining <= line.length) {
+        if (Math.floor(time * 2) % 2 === 0) { sx.fillStyle = accentHex; sx.fillRect(cx + 2, cy - 11, 11, 22); }
+        break;
+      }
+      remaining -= line.length + 1; cy += 27;
+    }
+    screenTex.needsUpdate = true;
+  }
+  drawScreen(60);
+  const screen = new THREE.Mesh(new THREE.PlaneGeometry(2.54, 1.46), new THREE.MeshBasicMaterial({ map: screenTex, toneMapped: false }));
+  screen.position.set(0, 2.25, -0.555); desk.add(screen);
+ 
+  /* keyboard, mouse, mug */
+  const kb = new THREE.Mesh(new RoundedBoxGeometry(1.7, 0.05, 0.55, 3, 0.02), dark); kb.position.set(-0.2, 1.19, 0.5); desk.add(kb);
+  const kbGlow = new THREE.Mesh(new THREE.BoxGeometry(1.62, 0.006, 0.47), new THREE.MeshStandardMaterial({ color: 0x021008, emissive: ACCENT, emissiveIntensity: 0.35 }));
+  kbGlow.position.set(-0.2, 1.222, 0.5); desk.add(kbGlow);
+  const mouse = new THREE.Mesh(new RoundedBoxGeometry(0.2, 0.06, 0.32, 3, 0.03), dark); mouse.position.set(1.05, 1.2, 0.5); desk.add(mouse);
+  const mug = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.14, 0.3, 24), new THREE.MeshStandardMaterial({ color: 0xe8f3ee, roughness: 0.4 })); mug.position.set(-1.9, 1.31, 0.2); desk.add(mug);
+  const handle = new THREE.Mesh(new THREE.TorusGeometry(0.09, 0.025, 8, 16), new THREE.MeshStandardMaterial({ color: 0xe8f3ee, roughness: 0.4 })); handle.position.set(-1.74, 1.31, 0.2); desk.add(handle);
+ 
+  /* floating iPhone with app texture */
+  function rr(ctx, x, y, w, h, r) {
+    ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+  }
+  const pc = document.createElement('canvas'); pc.width = 512; pc.height = 1024;
+  const px = pc.getContext('2d');
+  px.fillStyle = '#070d0a'; px.fillRect(0, 0, 512, 1024);
+  px.fillStyle = '#e8f3ee'; px.font = '600 46px system-ui, sans-serif'; px.textBaseline = 'alphabetic'; px.fillText('Jobs', 36, 118);
+  px.fillStyle = '#0f1a15'; rr(px, 32, 146, 448, 56, 28); px.fill();
+  px.fillStyle = '#5f776c'; px.font = '24px system-ui, sans-serif'; px.fillText('Search jobs, companies…', 64, 182);
+  for (let i = 0; i < 5; i++) {
+    const y = 232 + i * 132;
+    px.fillStyle = '#0f1a15'; rr(px, 32, y, 448, 114, 20); px.fill();
+    px.strokeStyle = 'rgba(0,255,127,.18)'; px.lineWidth = 2; rr(px, 32, y, 448, 114, 20); px.stroke();
+    px.fillStyle = accentHex; px.globalAlpha = 0.85 - i * 0.12; rr(px, 52, y + 22, 60, 60, 16); px.fill(); px.globalAlpha = 1;
+    px.fillStyle = '#cfe3d9'; rr(px, 132, y + 28, 190 - (i % 2) * 40, 14, 7); px.fill();
+    px.fillStyle = '#34493f'; rr(px, 132, y + 56, 260, 10, 5); px.fill();
+    px.fillStyle = '#34493f'; rr(px, 132, y + 76, 140, 10, 5); px.fill();
+  }
+  px.fillStyle = '#0b1410'; px.fillRect(0, 940, 512, 84);
+  [0, 1, 2, 3].forEach(i => { px.fillStyle = i === 1 ? accentHex : '#34493f'; px.beginPath(); px.arc(80 + i * 117, 982, 14, 0, 7); px.fill(); });
+  const phoneTex = new THREE.CanvasTexture(pc); phoneTex.colorSpace = THREE.SRGBColorSpace; phoneTex.anisotropy = 4;
+  const phone = new THREE.Group();
+  phone.add(new THREE.Mesh(new RoundedBoxGeometry(0.82, 1.65, 0.09, 4, 0.09), new THREE.MeshStandardMaterial({ color: 0x0a0f0d, metalness: 0.9, roughness: 0.25 })));
+  const pScreen = new THREE.Mesh(new THREE.PlaneGeometry(0.74, 1.57), new THREE.MeshBasicMaterial({ map: phoneTex, toneMapped: false }));
+  pScreen.position.z = 0.047; phone.add(pScreen);
+  phone.position.set(1.75, 2.1, 0.7); phone.rotation.set(0.05, -0.45, 0.05); scene.add(phone);
+ 
+  /* floating shapes */
+  const wire = new THREE.MeshBasicMaterial({ color: ACCENT, wireframe: true, transparent: true, opacity: 0.55 });
+  const ico = new THREE.Mesh(new THREE.IcosahedronGeometry(0.65, 1), wire); ico.position.set(-3.3, 3.1, -1.6); scene.add(ico);
+  const octa = new THREE.Mesh(new THREE.OctahedronGeometry(0.42), wire); octa.position.set(-4.1, 1.7, 1.0); scene.add(octa);
+  const knot = new THREE.Mesh(new THREE.TorusKnotGeometry(0.4, 0.13, 100, 14), new THREE.MeshStandardMaterial({ color: 0x021008, emissive: ACCENT, emissiveIntensity: 0.9, roughness: 0.3, metalness: 0.6 }));
+  knot.position.set(3.8, 3.3, -2); scene.add(knot);
+  const ring1 = new THREE.Mesh(new THREE.TorusGeometry(3.2, 0.012, 8, 120), new THREE.MeshBasicMaterial({ color: ACCENT, transparent: true, opacity: 0.5 }));
+  ring1.position.set(0, 2.6, -3.2); scene.add(ring1);
+  const ring2 = new THREE.Mesh(new THREE.TorusGeometry(4.4, 0.008, 8, 140), new THREE.MeshBasicMaterial({ color: 0x3c8bfd, transparent: true, opacity: 0.4 }));
+  ring2.position.set(0, 2.6, -3.6); scene.add(ring2);
+  const cubes = [];
+  for (let i = 0; i < 6; i++) {
+    const c = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.16, 0.16), new THREE.MeshStandardMaterial({ color: 0x021008, emissive: i % 2 ? 0x3c8bfd : ACCENT, emissiveIntensity: 1 }));
+    c.userData = { a: (i / 6) * Math.PI * 2, r: 3.4 + (i % 3) * 0.5, y: 2.4 + (i % 4) * 0.5, s: 0.25 + i * 0.04 };
+    scene.add(c); cubes.push(c);
+  }
+ 
+  /* particles */
+  const N = innerWidth < 700 ? 350 : 800;
+  const pos = new Float32Array(N * 3);
+  for (let i = 0; i < N; i++) { pos[i * 3] = (Math.random() - 0.5) * 30; pos[i * 3 + 1] = Math.random() * 11; pos[i * 3 + 2] = (Math.random() - 0.5) * 22; }
+  const pg = new THREE.BufferGeometry(); pg.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  const particles = new THREE.Points(pg, new THREE.PointsMaterial({ color: ACCENT, size: 0.045, transparent: true, opacity: 0.7, blending: THREE.AdditiveBlending, depthWrite: false }));
+  scene.add(particles);
+ 
+  /* camera path: one waypoint per [data-cam] section (hero, journey, skills, projects, contact) */
+  const camCurve = new THREE.CatmullRomCurve3([
+    new THREE.Vector3(-1.8, 2.3, 7.4),
+    new THREE.Vector3(2.4, 2.4, 3.6),
+    new THREE.Vector3(-1.2, 2.6, 4.2),
+    new THREE.Vector3(0, 5.2, 7.2),
+    new THREE.Vector3(1.9, 2.0, 3.2)
+  ], false, 'catmullrom', 0.5);
+  const lookCurve = new THREE.CatmullRomCurve3([
+    new THREE.Vector3(-1.8, 1.9, 0),
+    new THREE.Vector3(2.4, 1.9, -0.5),
+    new THREE.Vector3(-1.2, 1.7, 0.2),
+    new THREE.Vector3(0, 1.0, -1.5),
+    new THREE.Vector3(1.9, 1.9, -0.5)
+  ], false, 'catmullrom', 0.5);
+  const introPos = new THREE.Vector3(0, 7, 18);
+  const pPos = new THREE.Vector3(), pLook = new THREE.Vector3(), tmp = new THREE.Vector3();
+  const pointer = { x: 0, y: 0, sx: 0, sy: 0 };
+  addEventListener('pointermove', e => { pointer.x = (e.clientX / innerWidth - 0.5) * 2; pointer.y = (e.clientY / innerHeight - 0.5) * 2; });
+ 
+  function resize() {
+    renderer.setSize(innerWidth, innerHeight, false);
+    camera.aspect = innerWidth / innerHeight;
+    camera.fov = innerWidth < 700 ? 62 : 50;
+    camera.updateProjectionMatrix();
+    measure();
+  }
+  addEventListener('resize', resize);
+  resize();
+ 
+  const clock = new THREE.Clock();
+  let tCur = 0, frame = 0;
+  tick = function loop() {
+    const dt = Math.min(clock.getDelta(), 0.05), t = clock.elapsedTime;
+    frame++;
+ 
+    // scroll-driven camera
+    const tTarget = scrollT();
+    tCur += (tTarget - tCur) * (1 - Math.exp(-dt * 4));
+    camCurve.getPoint(tCur, pPos);
+    lookCurve.getPoint(tCur, pLook);
+ 
+    if (introRunning && introK < 1) introK = Math.min(1, introK + dt / 2.6);
+    pPos.lerpVectors(introPos, pPos, easeOut(introK));
+ 
+    pointer.sx += (pointer.x - pointer.sx) * 0.05; pointer.sy += (pointer.y - pointer.sy) * 0.05;
+    pPos.x += pointer.sx * 0.35; pPos.y -= pointer.sy * 0.18;
+    camera.position.copy(pPos);
+    camera.lookAt(pLook);
+ 
+    // ambient motion
+    if (!reduce) {
+      phone.position.y = 2.1 + Math.sin(t * 1.1) * 0.08;
+      phone.rotation.y = -0.45 + Math.sin(t * 0.6) * 0.18;
+      ico.rotation.x = t * 0.3; ico.rotation.y = t * 0.4; ico.position.y = 3.1 + Math.sin(t * 0.8) * 0.15;
+      octa.rotation.y = t * 0.6; octa.rotation.z = t * 0.3; octa.position.y = 1.7 + Math.sin(t * 1.0 + 1) * 0.12;
+      knot.rotation.x = t * 0.4; knot.rotation.y = t * 0.5;
+      ring1.rotation.z = t * 0.08; ring2.rotation.z = -t * 0.05;
+      cubes.forEach(c => {
+        const d = c.userData; d.a += dt * d.s;
+        c.position.set(Math.cos(d.a) * d.r, d.y + Math.sin(t + d.a) * 0.15, Math.sin(d.a) * d.r - 1);
+        c.rotation.x += dt; c.rotation.y += dt * 0.7;
+      });
+      particles.rotation.y = t * 0.012;
+      glow.intensity = 26 + Math.sin(t * 2) * 3;
+      if (frame % 3 === 0) drawScreen(t);
+    }
+ 
+    renderer.render(scene, camera);
+    requestAnimationFrame(loop);
+  };
+}
+ 
+/* ───────── loader ───────── */
+const ldPct = $('#ldPct'), ldBar = $('#ldBar'), ldMsg = $('#ldMsg'), ldGo = $('#ldGo'), loader = $('#loader');
+const DURATION = reduce ? 300 : 2400;
+const t0 = performance.now();
+let ready = false;
+(function load(now) {
+  const f = clamp((now - t0) / DURATION, 0, 1);
+  const p = Math.round(easeOut(f) * 100);
+  ldPct.textContent = String(p).padStart(2, '0');
+  ldBar.style.width = p + '%';
+  ldMsg.textContent = p < 35 ? 'setting up the studio…' : p < 70 ? 'plugging in the monitor…' : p < 100 ? 'compiling the scene…' : 'studio ready';
+  if (f < 1) { requestAnimationFrame(load); return; }
+  ready = true; ldGo.classList.add('show');
+})(t0);
+ 
+function enter() {
+  if (!ready) return;
+  ready = false;
+  loader.classList.add('hide');
+  document.body.classList.remove('locked');
+  introRunning = true;
+  measure(); updateDots();
+}
+loader.addEventListener('click', enter);
+addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') enter(); });
+if (renderer) tick();
+measure(); updateDots();
+addEventListener('load', measure);
+</script>
 </body>
 </html>
- 
