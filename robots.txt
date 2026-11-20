@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://raajupahlowan.github.io/sitemap.xml
